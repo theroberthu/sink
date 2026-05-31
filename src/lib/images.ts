@@ -1,16 +1,15 @@
 import type { MessTypeId } from "@/lib/types";
 
 // Central image asset config for Sink Cabinet Fix.
-// The site is image led, but real photography is not in place yet. Each asset
-// carries everything the UI needs: source path, descriptive alt text, an optional
-// overlay label, where it is used, a tone for the placeholder, and an icon key.
+// The site is image led. Each asset carries everything the UI needs: source path,
+// descriptive alt text, an optional overlay label, where it is used, a tone for the
+// fallback, and an icon key.
 //
 // HOW TO SHIP REAL IMAGES:
 //   1. Export the final art as WebP to the exact path in `src` below.
 //      Files live in /public/images (see public/images/README.md).
-//   2. Flip `available` to true for that asset.
-//   3. That is it. AssetImage swaps the placeholder for the real photo and
-//      falls back to the placeholder automatically if the file fails to load.
+//   2. That is it. AssetImage loads the real file automatically and falls back to
+//      the styled placeholder if the file is missing. No flag, no code change.
 
 export type ImageTone = "chaos" | "fixed" | "neutral";
 
