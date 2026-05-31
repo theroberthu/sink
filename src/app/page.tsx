@@ -144,6 +144,24 @@ export default function HomePage() {
         <p className="type-small mt-6">Three pieces. One calmer cabinet.</p>
       </Section>
 
+      {/* Quick fit reminder, before the process explanation. */}
+      <Section>
+        <div className="rounded-2xl border border-warning/40 bg-warning/10 p-6 sm:p-8">
+          <h2 className="type-card-title">Quick fit reminder</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Before you buy anything, measure three things: cabinet width, cabinet depth, and where
+            the pipes or garbage disposal sit. If pipes block the middle, choose Pipe Maze.
+          </p>
+          <CTALink
+            href="/under-sink-organizer-measurement-guide"
+            variant="secondary"
+            className="mt-5"
+          >
+            Read the measurement guide
+          </CTALink>
+        </div>
+      </Section>
+
       {/* How it works, now secondary and lightweight. */}
       <Section id="how-it-works" eyebrow="How it works" title="Three quick steps">
         <ol className="grid gap-4 sm:grid-cols-3">
