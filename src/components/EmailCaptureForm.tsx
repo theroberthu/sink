@@ -40,10 +40,7 @@ export function EmailCaptureForm({
   if (status === "done") {
     return (
       <div className="rounded-xl border border-green-200 bg-green-50 p-6" role="status">
-        <p className="font-semibold">Plan sent.</p>
-        <p className="mt-1 text-sm text-slate-600">
-          Check your inbox. We will send your 3 piece reset shortly.
-        </p>
+        <p className="font-semibold">Your reset plan is on its way.</p>
       </div>
     );
   }
