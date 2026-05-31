@@ -27,8 +27,6 @@ export interface ImageAsset {
   tone: ImageTone;
   /** Icon key for the placeholder. Mapped to a lucide icon in AssetImage. */
   iconKey: string;
-  /** Flip to true once the real file is in /public at `src`. */
-  available: boolean;
 }
 
 // 1. Homepage hero before and after.
@@ -40,7 +38,6 @@ export const HERO_CHAOS: ImageAsset = {
   usage: "Homepage hero, before panel",
   tone: "chaos",
   iconKey: "spray",
-  available: false,
 };
 
 export const HERO_FIXED: ImageAsset = {
@@ -51,7 +48,6 @@ export const HERO_FIXED: ImageAsset = {
   usage: "Homepage hero, after panel",
   tone: "fixed",
   iconKey: "sparkles",
-  available: false,
 };
 
 // 2. Mess type cards, one visual per mess type.
@@ -63,7 +59,6 @@ export const MESS_IMAGES: Record<MessTypeId, ImageAsset> = {
     usage: "Bottle Avalanche mess card and result thumbnail",
     tone: "chaos",
     iconKey: "spray",
-    available: false,
   },
   "pipe-maze": {
     // TODO: drop the final file at public/images/mess-pipe-maze.webp
@@ -72,7 +67,6 @@ export const MESS_IMAGES: Record<MessTypeId, ImageAsset> = {
     usage: "Pipe Maze mess card and result thumbnail",
     tone: "neutral",
     iconKey: "wrench",
-    available: false,
   },
   "tiny-cabinet-energy": {
     // TODO: drop the final file at public/images/mess-tiny-cabinet.webp
@@ -81,7 +75,6 @@ export const MESS_IMAGES: Record<MessTypeId, ImageAsset> = {
     usage: "Tiny Cabinet Energy mess card and result thumbnail",
     tone: "neutral",
     iconKey: "boxes",
-    available: false,
   },
 };
 
@@ -112,7 +105,6 @@ export const COMPONENT_VISUALS: ComponentVisual[] = [
       usage: "Three piece fix section, access",
       tone: "fixed",
       iconKey: "access",
-      available: false,
     },
   },
   {
@@ -128,7 +120,6 @@ export const COMPONENT_VISUALS: ComponentVisual[] = [
       usage: "Three piece fix section, protection",
       tone: "fixed",
       iconKey: "shield",
-      available: false,
     },
   },
   {
@@ -144,7 +135,6 @@ export const COMPONENT_VISUALS: ComponentVisual[] = [
       usage: "Three piece fix section, control",
       tone: "fixed",
       iconKey: "basket",
-      available: false,
     },
   },
 ];
