@@ -8,6 +8,8 @@ import { FitCheck } from "@/components/FitCheck";
 import { EmailCaptureForm } from "@/components/EmailCaptureForm";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Badge } from "@/components/Badge";
+import { AssetImage } from "@/components/AssetImage";
+import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
 import { getProductsForMessType } from "@/data/products";
@@ -24,6 +26,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
   const productsRef = useRef<HTMLDivElement>(null);
 
   const products = getProductsForMessType(messType.id, messType.components);
+  const messImage = getMessImage(messType.id);
   const resultType = `${messType.id}__${goal.id}`;
 
   useEffect(() => {
@@ -37,20 +40,31 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
   return (
     <div className="space-y-8">
-      {/* Diagnosis */}
+      {/* Diagnosis with a small before style thumbnail of the selected mess */}
       <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="accent">{messType.name}</Badge>
-          <Badge tone="primary">{goal.name}</Badge>
+        <div className="flex flex-col gap-6 sm:flex-row">
+          <AssetImage
+            asset={messImage}
+            className="aspect-[4/3] w-full shrink-0 rounded-xl sm:w-40"
+            sizes="(min-width: 640px) 10rem, 90vw"
+          />
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge tone="accent">{messType.name}</Badge>
+              <Badge tone="primary">{goal.name}</Badge>
+            </div>
+            <h2 className="type-page-title mt-3 flex items-start gap-2">
+              <Sparkles className="mt-1 h-7 w-7 shrink-0 text-primary" aria-hidden="true" />
+              Three pieces. One calmer cabinet.
+            </h2>
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+              {messType.diagnosis}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your goal is {goal.name.toLowerCase()}: {goal.description.toLowerCase()}
+            </p>
+          </div>
         </div>
-        <h2 className="type-page-title mt-4 flex items-start gap-2">
-          <Sparkles className="mt-1 h-7 w-7 shrink-0 text-primary" aria-hidden="true" />
-          Three pieces. One calmer cabinet.
-        </h2>
-        <p className="mt-3 text-base leading-relaxed text-muted-foreground">{messType.diagnosis}</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Your goal is {goal.name.toLowerCase()}: {goal.description.toLowerCase()}
-        </p>
       </div>
 
       {/* 3 piece setup */}

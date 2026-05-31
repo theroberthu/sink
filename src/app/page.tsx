@@ -7,6 +7,8 @@ import { PageViewTracker } from "@/components/PageViewTracker";
 import { HeroVisual } from "@/components/HeroVisual";
 import { CTASection } from "@/components/CTASection";
 import { Badge } from "@/components/Badge";
+import { AssetImage } from "@/components/AssetImage";
+import { COMPONENT_VISUALS } from "@/lib/images";
 import { MESS_TYPES } from "@/data/messTypes";
 
 const HOW_IT_WORKS = [
@@ -85,20 +87,26 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Why 3 pieces is enough */}
+      {/* Why 3 pieces is enough: the 3 piece fix */}
       <Section eyebrow="Why three" title="Why 3 pieces is enough" muted>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {[
-            { title: "Reach", body: "Pull your stuff to the front so the back row stops swallowing bottles." },
-            { title: "Use the space", body: "Fit your actual layout, whether that is pipes in the middle or a tiny footprint." },
-            { title: "Protect the base", body: "A waterproof liner so a slow drip is never a project." },
-          ].map((item, index) => (
-            <div key={item.title} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-success/15 text-sm font-bold text-success">
-                {index + 1}
-              </span>
-              <h3 className="mt-4 font-bold">{item.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
+        <div className="grid gap-5 sm:grid-cols-3">
+          {COMPONENT_VISUALS.map((item) => (
+            <div
+              key={item.key}
+              className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
+            >
+              <AssetImage
+                asset={item.image}
+                className="aspect-[4/3] w-full"
+                sizes="(min-width: 640px) 30vw, 90vw"
+              />
+              <div className="p-6">
+                <h3 className="font-bold">{item.title}</h3>
+                <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-primary">
+                  {item.concept}
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">{item.copy}</p>
+              </div>
             </div>
           ))}
         </div>

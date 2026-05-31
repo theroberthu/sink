@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
-import { Card } from "@/components/Card";
-import { MESS_ICONS } from "@/components/messIcons";
+import { AssetImage } from "@/components/AssetImage";
+import { getMessImage } from "@/lib/images";
 import type { MessType } from "@/lib/types";
 
 interface MessTypeCardProps {
@@ -10,43 +10,49 @@ interface MessTypeCardProps {
   selected?: boolean;
 }
 
-// Large card describing one mess type. Static on content pages, selectable in the tool.
+// Image led card for one mess type. The visual leads, copy stays short.
+// Static on content pages, selectable in the tool.
 export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps) {
-  const Icon = MESS_ICONS[messType.id];
+  const image = getMessImage(messType.id);
 
-  const content = (
+  const inner = (
     <>
-      <div className="flex items-center justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
-          <Icon className="h-6 w-6" aria-hidden="true" />
-        </span>
+      <div className="relative">
+        <AssetImage
+          asset={image}
+          className="aspect-[4/3] w-full"
+          sizes="(min-width: 640px) 30vw, 90vw"
+        />
         {onSelect && selected ? (
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft">
             <Check className="h-4 w-4" aria-hidden="true" />
           </span>
         ) : null}
       </div>
-      <h3 className="type-card-title mt-4">{messType.name}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        {messType.shortDescription}
-      </p>
-      <ul className="mt-4 space-y-1.5 text-sm text-foreground/80">
-        {messType.components.map((component) => (
-          <li key={component} className="flex items-start gap-2">
-            <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-hidden="true" />
-            <span>{component}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="p-5">
+        <h3 className="type-card-title">{messType.name}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+          {messType.shortDescription}
+        </p>
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {messType.components.map((component) => (
+            <li
+              key={component}
+              className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
+            >
+              {component}
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 
+  const shell =
+    "overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-soft transition-all duration-150";
+
   if (!onSelect) {
-    return (
-      <Card as="article" className="h-full">
-        {content}
-      </Card>
-    );
+    return <article className={`${shell} border-border`}>{inner}</article>;
   }
 
   return (
@@ -55,12 +61,12 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
       onClick={() => onSelect(messType.id)}
       aria-pressed={selected}
       className={[
-        "h-full rounded-2xl border bg-card p-6 text-left text-card-foreground shadow-soft transition-all duration-150",
-        "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lift",
+        shell,
+        "h-full w-full text-left hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lift",
         selected ? "border-primary ring-2 ring-primary/30" : "border-border",
       ].join(" ")}
     >
-      {content}
+      {inner}
     </button>
   );
 }
