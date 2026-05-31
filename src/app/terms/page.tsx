@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <Section title="Terms of Use" className="pt-12">
-      <div className="max-w-2xl space-y-4 text-slate-700">
+      <div className="max-w-2xl space-y-4 text-muted-foreground leading-relaxed">
         <p>
           This is a placeholder terms of use page for Sink Cabinet Fix. We will replace it with full
           legal copy before launch.

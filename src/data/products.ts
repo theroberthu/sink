@@ -14,6 +14,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/pull-out-organizer",
     messType: "bottle-avalanche",
+    role: "Main fix",
     active: true,
   },
   {
@@ -25,6 +26,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/cabinet-liner-ba",
     messType: "bottle-avalanche",
+    role: "Cabinet protection",
     active: true,
   },
   {
@@ -36,6 +38,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/cleaning-caddy",
     messType: "bottle-avalanche",
+    role: "Grab and go",
     active: true,
   },
 
@@ -49,6 +52,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/narrow-side-organizer",
     messType: "pipe-maze",
+    role: "Main fix",
     active: true,
   },
   {
@@ -60,6 +64,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/cabinet-liner-pm",
     messType: "pipe-maze",
+    role: "Cabinet protection",
     active: true,
   },
   {
@@ -71,6 +76,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/small-bins",
     messType: "pipe-maze",
+    role: "Grab and go",
     active: true,
   },
 
@@ -84,6 +90,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/slim-organizer",
     messType: "tiny-cabinet-energy",
+    role: "Main fix",
     active: true,
   },
   {
@@ -95,6 +102,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/stackable-tray",
     messType: "tiny-cabinet-energy",
+    role: "Grab and go",
     active: true,
   },
   {
@@ -106,6 +114,7 @@ export const PRODUCTS: Product[] = [
     retailer: "Amazon",
     affiliateUrl: "https://example.com/affiliate/cabinet-liner-tc",
     messType: "tiny-cabinet-energy",
+    role: "Cabinet protection",
     active: true,
   },
 ];

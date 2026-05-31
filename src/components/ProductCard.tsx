@@ -1,18 +1,27 @@
 "use client";
 
-import { Card } from "@/components/Card";
+import { ExternalLink } from "lucide-react";
+import { Badge } from "@/components/Badge";
 import { trackProductClick } from "@/lib/tracking";
-import type { GoalId, MessTypeId, Product } from "@/lib/types";
+import type { GoalId, MessTypeId, Product, ProductRole } from "@/lib/types";
 
 interface ProductCardProps {
   product: Product;
+  /** Optional step number for the 1 of 3 setup layout. */
+  step?: number;
   /** Context for click tracking. Optional so the card can render on content pages too. */
   messType?: MessTypeId;
   goal?: GoalId;
 }
 
+const ROLE_TONE: Record<ProductRole, "primary" | "success" | "accent"> = {
+  "Main fix": "primary",
+  "Cabinet protection": "success",
+  "Grab and go": "accent",
+};
+
 // Product recommendation card. Clicking View Product fires tracking, then opens the link.
-export function ProductCard({ product, messType, goal }: ProductCardProps) {
+export function ProductCard({ product, step, messType, goal }: ProductCardProps) {
   async function handleClick() {
     // Fire and forget tracking. We open the link regardless so the user is never blocked.
     if (messType && goal) {
@@ -29,23 +38,30 @@ export function ProductCard({ product, messType, goal }: ProductCardProps) {
   }
 
   return (
-    <Card as="article" className="flex h-full flex-col">
-      <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
-        {product.componentType}
-      </p>
+    <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-soft transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lift">
+      <div className="flex items-center justify-between gap-2">
+        <Badge tone={ROLE_TONE[product.role]}>{product.role}</Badge>
+        {step ? (
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+            {step}
+          </span>
+        ) : null}
+      </div>
+      <p className="type-caption mt-4">{product.componentType}</p>
       <h3 className="mt-1 text-lg font-bold">{product.productName}</h3>
-      <p className="mt-2 flex-1 text-sm text-slate-600">{product.reason}</p>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{product.reason}</p>
       <div className="mt-4 flex items-center justify-between text-sm">
-        <span className="font-semibold">{product.price}</span>
-        <span className="text-slate-500">{product.retailer}</span>
+        <span className="text-base font-bold">{product.price}</span>
+        <span className="text-muted-foreground">{product.retailer}</span>
       </div>
       <button
         type="button"
         onClick={handleClick}
-        className="mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+        className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-all duration-150 hover:bg-primary/90 hover:shadow-lift active:translate-y-px"
       >
         View Product
+        <ExternalLink className="h-4 w-4" aria-hidden="true" />
       </button>
-    </Card>
+    </article>
   );
 }

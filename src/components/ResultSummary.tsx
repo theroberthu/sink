@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Mail, PackageOpen, ShoppingBag, Sparkles } from "lucide-react";
 import { CTAButton } from "@/components/CTAButton";
 import { ProductCard } from "@/components/ProductCard";
 import { FitCheck } from "@/components/FitCheck";
 import { EmailCaptureForm } from "@/components/EmailCaptureForm";
 import { WaitlistForm } from "@/components/WaitlistForm";
+import { Badge } from "@/components/Badge";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
 import { getProductsForMessType } from "@/data/products";
@@ -35,24 +37,34 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">Your reset</p>
-        <h2 className="mt-1 text-2xl font-bold">
-          {messType.name} plus {goal.name}
+      {/* Diagnosis */}
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge tone="accent">{messType.name}</Badge>
+          <Badge tone="primary">{goal.name}</Badge>
+        </div>
+        <h2 className="type-page-title mt-4 flex items-start gap-2">
+          <Sparkles className="mt-1 h-7 w-7 shrink-0 text-primary" aria-hidden="true" />
+          Three pieces. One calmer cabinet.
         </h2>
-        <p className="mt-3 text-slate-700">{messType.diagnosis}</p>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground">{messType.diagnosis}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
           Your goal is {goal.name.toLowerCase()}: {goal.description.toLowerCase()}
         </p>
       </div>
 
+      {/* 3 piece setup */}
       <div ref={productsRef}>
-        <h3 className="mb-4 text-xl font-bold">Your 3 piece setup</h3>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {products.map((product) => (
+        <div className="flex items-center justify-between">
+          <h3 className="type-section-title">Your 3 piece setup</h3>
+          <span className="type-small">No judgment. We have seen worse.</span>
+        </div>
+        <div className="mt-5 grid gap-5 sm:grid-cols-3">
+          {products.map((product, index) => (
             <ProductCard
               key={product.id}
               product={product}
+              step={index + 1}
               messType={messType.id}
               goal={goal.id}
             />
@@ -62,18 +74,26 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
       <FitCheck />
 
+      {/* CTAs */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <CTAButton onClick={scrollToProducts}>Shop This 3 Piece Setup</CTAButton>
+        <CTAButton onClick={scrollToProducts} className="flex-1">
+          <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+          Shop This 3 Piece Setup
+        </CTAButton>
         <CTAButton
           variant="secondary"
+          className="flex-1"
           onClick={() => setPanel(panel === "email" ? "none" : "email")}
         >
+          <Mail className="h-5 w-5" aria-hidden="true" />
           Send Me This Plan
         </CTAButton>
         <CTAButton
           variant="secondary"
+          className="flex-1"
           onClick={() => setPanel(panel === "waitlist" ? "none" : "waitlist")}
         >
+          <PackageOpen className="h-5 w-5" aria-hidden="true" />
           Join Kit Waitlist
         </CTAButton>
       </div>

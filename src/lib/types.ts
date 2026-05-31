@@ -19,6 +19,10 @@ export interface MessType {
   name: string;
   shortDescription: string;
   diagnosis: string;
+  /** Who this mess type is for, used on the SEO landing page. */
+  whoFor: string;
+  /** Fit considerations to check before buying, used on the SEO landing page. */
+  fitConsiderations: string[];
   /** Ordered list of the 3 component types that make up this reset. */
   components: ComponentType[];
 }
@@ -28,6 +32,9 @@ export interface Goal {
   name: string;
   description: string;
 }
+
+/** Role of a piece within a 3 piece reset. Drives the badge on the product card. */
+export type ProductRole = "Main fix" | "Cabinet protection" | "Grab and go";
 
 export interface Product {
   id: string;
@@ -40,6 +47,8 @@ export interface Product {
   affiliateUrl: string;
   imageUrl?: string;
   messType: MessTypeId;
+  /** Badge label describing the piece's job in the reset. */
+  role: ProductRole;
   active: boolean;
 }
 

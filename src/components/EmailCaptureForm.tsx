@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircle2, Loader2, Mail } from "lucide-react";
 import { CTAButton } from "@/components/CTAButton";
 import { submitEmailCapture } from "@/lib/tracking";
 import type { GoalId, MessTypeId } from "@/lib/types";
@@ -28,28 +29,30 @@ export function EmailCaptureForm({
       return;
     }
     setStatus("submitting");
-    const { ok } = await submitEmailCapture({
-      email,
-      messType,
-      goal,
-      resultType,
-    });
+    const { ok } = await submitEmailCapture({ email, messType, goal, resultType });
     setStatus(ok ? "done" : "error");
   }
 
   if (status === "done") {
     return (
-      <div className="rounded-xl border border-green-200 bg-green-50 p-6" role="status">
+      <div
+        className="flex items-center gap-3 rounded-2xl border border-success/40 bg-success/10 p-6"
+        role="status"
+      >
+        <CheckCircle2 className="h-6 w-6 shrink-0 text-success" aria-hidden="true" />
         <p className="font-semibold">Your reset plan is on its way.</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6">
-      <h3 className="text-lg font-bold">{heading}</h3>
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+      <div className="flex items-center gap-2">
+        <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
+        <h3 className="type-card-title">{heading}</h3>
+      </div>
       <div className="mt-4">
-        <label htmlFor="email-capture" className="block text-sm font-medium">
+        <label htmlFor="email-capture" className="type-label">
           Email
         </label>
         <input
@@ -60,16 +63,23 @@ export function EmailCaptureForm({
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+          className="mt-1.5 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary"
         />
       </div>
       {status === "error" ? (
-        <p className="mt-3 text-sm text-red-600" role="alert">
+        <p className="mt-3 text-sm text-destructive" role="alert">
           Something went wrong. Please try again.
         </p>
       ) : null}
       <CTAButton type="submit" className="mt-4 w-full" disabled={status === "submitting"}>
-        {status === "submitting" ? "Sending..." : "Send My Plan"}
+        {status === "submitting" ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            Sending
+          </>
+        ) : (
+          "Send My Plan"
+        )}
       </CTAButton>
     </form>
   );

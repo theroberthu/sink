@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function AffiliateDisclosurePage() {
   return (
     <Section title="Affiliate Disclosure" className="pt-12">
-      <div className="max-w-2xl space-y-4 text-slate-700">
+      <div className="max-w-2xl space-y-4 text-muted-foreground leading-relaxed">
         <p>
           Some product links may earn us a commission at no extra cost to you. We recommend products
           based on fit, usefulness, and availability.

@@ -1,15 +1,19 @@
+import { MousePointerClick, ListChecks, Sparkles, ShoppingBag } from "lucide-react";
 import { Section } from "@/components/Section";
 import { MessTypeCard } from "@/components/MessTypeCard";
 import { CTALink } from "@/components/CTAButton";
 import { TrackedCTALink } from "@/components/TrackedCTALink";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { HeroVisual } from "@/components/HeroVisual";
+import { CTASection } from "@/components/CTASection";
+import { Badge } from "@/components/Badge";
 import { MESS_TYPES } from "@/data/messTypes";
 
 const HOW_IT_WORKS = [
-  { step: "1", title: "Pick your mess", body: "Choose the under sink scene that looks most like yours." },
-  { step: "2", title: "Pick your goal", body: "Tell us what would make opening the cabinet better." },
-  { step: "3", title: "Get your 3 piece reset plan", body: "See exactly three pieces that fix that mess." },
-  { step: "4", title: "Shop or join the waitlist", body: "Grab the products or join the kit waitlist." },
+  { icon: MousePointerClick, title: "Pick your mess", body: "Choose the under sink scene that looks most like yours." },
+  { icon: ListChecks, title: "Pick your goal", body: "Tell us what would make opening the cabinet better." },
+  { icon: Sparkles, title: "Get your 3 piece reset", body: "See exactly three pieces that fix that mess." },
+  { icon: ShoppingBag, title: "Shop or join the waitlist", body: "Grab the products or join the kit waitlist." },
 ];
 
 export default function HomePage() {
@@ -18,44 +22,63 @@ export default function HomePage() {
       <PageViewTracker event="landing_page_viewed" />
 
       {/* Hero */}
-      <Section className="pt-16">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-            Your sink cabinet should not fight back.
-          </h1>
-          <p className="mt-4 text-lg text-slate-600">
-            Pick the mess that looks most like yours and get a simple 3 piece kitchen sink reset
-            plan in under a minute.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <TrackedCTALink href="/tool" event="find_fix_clicked">
-              Find My Cabinet Fix
-            </TrackedCTALink>
-            <CTALink href="#mess-types" variant="secondary">
-              See Mess Types
-            </CTALink>
+      <section className="px-4 pb-8 pt-14 sm:pt-20">
+        <div className="mx-auto grid w-full max-w-5xl items-center gap-10 lg:grid-cols-2">
+          <div>
+            <Badge tone="accent">Pick your mess. Get your fix.</Badge>
+            <h1 className="type-display mt-4">Your sink cabinet should not fight back.</h1>
+            <p className="type-body mt-5 text-lg">
+              Pick the mess that looks most like yours and get a simple 3 piece kitchen sink reset
+              plan in under a minute.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <TrackedCTALink href="/tool" event="find_fix_clicked">
+                Find My Cabinet Fix
+              </TrackedCTALink>
+              <CTALink href="#mess-types" variant="secondary">
+                See Mess Types
+              </CTALink>
+            </div>
+            <p className="type-small mt-4">This is not a kitchen renovation. It is a cabinet reset.</p>
           </div>
+          <HeroVisual />
         </div>
-      </Section>
+      </section>
 
       {/* How it works */}
-      <Section id="how-it-works" title="How it works" muted>
-        <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {HOW_IT_WORKS.map((item) => (
-            <li key={item.step} className="rounded-xl border border-slate-200 bg-white p-6">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
-                {item.step}
-              </span>
-              <h3 className="mt-3 font-bold">{item.title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{item.body}</p>
-            </li>
-          ))}
+      <Section
+        id="how-it-works"
+        eyebrow="How it works"
+        title="Four steps to a calmer cabinet"
+        muted
+      >
+        <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {HOW_IT_WORKS.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <li key={item.title} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="text-sm font-bold text-muted-foreground">Step {index + 1}</span>
+                </div>
+                <h3 className="mt-4 font-bold">{item.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
+              </li>
+            );
+          })}
         </ol>
       </Section>
 
       {/* The 3 mess types */}
-      <Section id="mess-types" title="The 3 mess types">
-        <div className="grid gap-6 sm:grid-cols-3">
+      <Section
+        id="mess-types"
+        eyebrow="The 3 mess types"
+        title="Find the one that looks like your cabinet"
+        description="Stop losing the cleaner you bought yesterday. Start with the mess you recognize."
+      >
+        <div className="grid gap-5 sm:grid-cols-3">
           {MESS_TYPES.map((messType) => (
             <MessTypeCard key={messType.id} messType={messType} />
           ))}
@@ -63,33 +86,51 @@ export default function HomePage() {
       </Section>
 
       {/* Why 3 pieces is enough */}
-      <Section title="Why 3 pieces is enough" muted>
-        <div className="max-w-2xl space-y-4 text-slate-700">
-          <p>
-            Most under sink cabinets do not need a system with twenty parts. They need a way to
-            reach your stuff, a way to use the space, and a way to keep the base clean.
+      <Section eyebrow="Why three" title="Why 3 pieces is enough" muted>
+        <div className="grid gap-6 sm:grid-cols-3">
+          {[
+            { title: "Reach", body: "Pull your stuff to the front so the back row stops swallowing bottles." },
+            { title: "Use the space", body: "Fit your actual layout, whether that is pipes in the middle or a tiny footprint." },
+            { title: "Protect the base", body: "A waterproof liner so a slow drip is never a project." },
+          ].map((item, index) => (
+            <div key={item.title} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-success/15 text-sm font-bold text-success">
+                {index + 1}
+              </span>
+              <h3 className="mt-4 font-bold">{item.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
+            </div>
+          ))}
+        </div>
+        <p className="type-small mt-6">Three pieces. One calmer cabinet.</p>
+      </Section>
+
+      {/* Quick fit reminder */}
+      <Section>
+        <div className="rounded-2xl border border-warning/40 bg-warning/10 p-6 sm:p-8">
+          <h2 className="type-card-title">Quick fit reminder</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Before you buy anything, measure three things: cabinet width, cabinet depth, and where
+            the pipes or garbage disposal sit. If pipes block the middle, choose Pipe Maze.
           </p>
-          <p>
-            Three pieces cover all three without crowding the cabinet or blowing your budget. It is
-            a reset, not a renovation.
-          </p>
+          <CTALink
+            href="/under-sink-organizer-measurement-guide"
+            variant="secondary"
+            className="mt-5"
+          >
+            Read the measurement guide
+          </CTALink>
         </div>
       </Section>
 
-      {/* CTA to start the tool */}
-      <Section>
-        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-          <h2 className="text-2xl font-bold">Ready to fix the chaos?</h2>
-          <p className="mt-2 text-slate-600">
-            Pick your mess and your goal. We will hand you a plan in under a minute.
-          </p>
-          <div className="mt-6 flex justify-center">
-            <TrackedCTALink href="/tool" event="find_fix_clicked">
-              Find My Cabinet Fix
-            </TrackedCTALink>
-          </div>
-        </div>
-      </Section>
+      {/* CTA section */}
+      <CTASection
+        title="Ready to fix the chaos?"
+        subtitle="Pick your mess and your goal. We will hand you a plan in under a minute."
+        ctaHref="/tool"
+        ctaLabel="Find My Cabinet Fix"
+        ctaEvent="find_fix_clicked"
+      />
     </>
   );
 }

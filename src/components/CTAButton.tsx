@@ -1,14 +1,18 @@
 import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "secondary";
+type Variant = "primary" | "secondary" | "onPrimary";
 
 const base =
-  "inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700",
-  secondary: "border border-slate-300 bg-white text-slate-900 hover:bg-slate-50",
+  primary:
+    "bg-primary text-primary-foreground shadow-soft hover:bg-primary/90 hover:shadow-lift active:translate-y-px",
+  secondary:
+    "border border-border bg-card text-foreground hover:border-primary/40 hover:bg-muted active:translate-y-px",
+  onPrimary:
+    "bg-card text-primary shadow-soft hover:bg-card/90 hover:shadow-lift active:translate-y-px",
 };
 
 interface CTALinkProps {

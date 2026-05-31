@@ -1,25 +1,34 @@
 import Link from "next/link";
+import { Droplets } from "lucide-react";
+import { CTALink } from "@/components/CTAButton";
 import { SITE } from "@/lib/site";
 
-// Simple site header. Placeholder styling, semantic structure for a later redesign.
+const NAV = [
+  { href: "/kitchen-sink-reset", label: "Kitchen Sink Reset" },
+  { href: "/under-sink-organizer-measurement-guide", label: "Measurement Guide" },
+];
+
+// Sticky site header with the wordmark and the primary path into the tool.
 export function Header() {
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-lg font-bold">
-          {SITE.name}
+    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex items-center gap-2 font-bold">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Droplets className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span>{SITE.name}</span>
         </Link>
-        <nav aria-label="Primary" className="hidden gap-6 text-sm font-medium sm:flex">
-          <Link href="/kitchen-sink-reset" className="hover:text-blue-700">
-            Kitchen Sink Reset
-          </Link>
-          <Link href="/under-sink-organizer-measurement-guide" className="hover:text-blue-700">
-            Measurement Guide
-          </Link>
-          <Link href="/tool" className="hover:text-blue-700">
-            Find My Fix
-          </Link>
+        <nav aria-label="Primary" className="hidden items-center gap-6 text-sm font-medium md:flex">
+          {NAV.map((item) => (
+            <Link key={item.href} href={item.href} className="text-muted-foreground hover:text-foreground">
+              {item.label}
+            </Link>
+          ))}
         </nav>
+        <CTALink href="/tool" className="px-4 py-2 text-sm">
+          Find My Fix
+        </CTALink>
       </div>
     </header>
   );
