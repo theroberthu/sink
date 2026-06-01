@@ -49,7 +49,7 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
   );
 
   const shell =
-    "overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-soft transition-all duration-150";
+    "overflow-hidden rounded-2xl border bg-card text-card-foreground transition-colors duration-150";
 
   if (!onSelect) {
     return <article className={`${shell} border-border`}>{inner}</article>;
@@ -62,8 +62,8 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
       aria-pressed={selected}
       className={[
         shell,
-        "h-full w-full text-left hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lift",
-        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
+        "h-full w-full text-left hover:border-foreground/30",
+        selected ? "border-primary ring-1 ring-primary" : "border-border",
       ].join(" ")}
     >
       {inner}

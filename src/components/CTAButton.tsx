@@ -4,17 +4,13 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "onPrimary";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-60";
 
-// Tactile feel: a darker bottom inset edge on the primary so it reads like a
-// physical, pressable button, and presses down on active.
+// Crisp and modern: solid deep green primary, white text, simple hover. No heavy shadow.
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-primary text-primary-foreground shadow-[0_4px_0_0_rgb(var(--primary)/0.55),0_8px_24px_rgb(27_36_48/0.10)] hover:-translate-y-px hover:bg-primary/95 active:translate-y-0.5 active:shadow-[0_1px_0_0_rgb(var(--primary)/0.55)]",
-  secondary:
-    "border-2 border-border bg-card text-foreground shadow-soft hover:border-primary/50 hover:bg-muted active:translate-y-0.5 active:shadow-none",
-  onPrimary:
-    "bg-card text-primary shadow-[0_4px_0_0_rgb(27_36_48/0.12),0_8px_24px_rgb(27_36_48/0.10)] hover:-translate-y-px active:translate-y-0.5",
+  primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+  secondary: "border border-border bg-card text-foreground hover:border-foreground/30 hover:bg-muted",
+  onPrimary: "bg-card text-primary hover:bg-secondary",
 };
 
 interface CTALinkProps {

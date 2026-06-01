@@ -38,7 +38,7 @@ export function ProductCard({ product, step, messType, goal }: ProductCardProps)
   }
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-soft transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lift">
+    <article className="flex h-full flex-col rounded-2xl border border-border bg-card p-6 text-card-foreground transition-colors duration-150 hover:border-foreground/20">
       <div className="flex items-center justify-between gap-2">
         <Badge tone={ROLE_TONE[product.role]}>{product.role}</Badge>
         {step ? (
@@ -48,16 +48,16 @@ export function ProductCard({ product, step, messType, goal }: ProductCardProps)
         ) : null}
       </div>
       <p className="type-caption mt-4">{product.componentType}</p>
-      <h3 className="mt-1 text-lg font-bold">{product.productName}</h3>
+      <h3 className="mt-1 text-lg font-semibold tracking-[-0.01em]">{product.productName}</h3>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{product.reason}</p>
       <div className="mt-4 flex items-center justify-between text-sm">
-        <span className="text-base font-bold">{product.price}</span>
+        <span className="text-base font-semibold">{product.price}</span>
         <span className="text-muted-foreground">{product.retailer}</span>
       </div>
       <button
         type="button"
         onClick={handleClick}
-        className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-all duration-150 hover:bg-primary/90 hover:shadow-lift active:translate-y-px"
+        className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary-hover"
       >
         View Product
         <ExternalLink className="h-4 w-4" aria-hidden="true" />

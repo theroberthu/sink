@@ -20,10 +20,10 @@ export function ProgressIndicator({ current, steps }: ProgressIndicatorProps) {
             <span
               aria-current={isActive ? "step" : undefined}
               className={[
-                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors",
-                isComplete ? "bg-success text-success-foreground" : "",
-                isActive ? "bg-primary text-primary-foreground ring-4 ring-primary/15" : "",
-                !isComplete && !isActive ? "bg-muted text-muted-foreground" : "",
+                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors",
+                isComplete ? "bg-primary text-primary-foreground" : "",
+                isActive ? "bg-primary text-primary-foreground" : "",
+                !isComplete && !isActive ? "border border-border bg-card text-muted-foreground" : "",
               ].join(" ")}
             >
               {isComplete ? <Check className="h-4 w-4" aria-hidden="true" /> : stepNumber}
@@ -38,9 +38,7 @@ export function ProgressIndicator({ current, steps }: ProgressIndicatorProps) {
             {stepNumber < steps.length ? (
               <span
                 aria-hidden="true"
-                className={`h-0.5 flex-1 rounded-full ${
-                  isComplete ? "bg-success" : "bg-border"
-                }`}
+                className={`h-px flex-1 ${isComplete ? "bg-primary" : "bg-border"}`}
               />
             ) : null}
           </li>

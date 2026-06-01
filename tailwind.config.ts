@@ -33,6 +33,7 @@ const config: Config = {
         },
         primary: {
           DEFAULT: token("primary"),
+          hover: token("primary-hover"),
           foreground: token("primary-foreground"),
         },
         secondary: {
@@ -68,15 +69,16 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        xl: "0.875rem",
-        "2xl": "1.25rem",
+        xl: "0.75rem",
+        "2xl": "1rem",
       },
       boxShadow: {
-        soft: "0 1px 2px rgb(27 36 48 / 0.04), 0 8px 24px rgb(27 36 48 / 0.06)",
-        lift: "0 2px 4px rgb(27 36 48 / 0.06), 0 12px 32px rgb(27 36 48 / 0.10)",
+        // Restrained, modern shadows. Used sparingly.
+        soft: "0 1px 2px rgb(17 24 39 / 0.04)",
+        lift: "0 4px 16px rgb(17 24 39 / 0.08)",
       },
     },
   },

@@ -82,7 +82,7 @@ export default function HomePage() {
               return (
                 <li
                   key={item.label}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold shadow-soft"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm font-semibold"
                 >
                   <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
                   {item.label}
@@ -107,7 +107,7 @@ export default function HomePage() {
             return (
               <article
                 key={messType.id}
-                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lift"
+                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-150 hover:border-foreground/20"
               >
                 <div className="relative">
                   <AssetImage
@@ -115,7 +115,7 @@ export default function HomePage() {
                     className="aspect-[4/3] w-full"
                     sizes="(min-width: 640px) 30vw, 90vw"
                   />
-                  <span className="absolute right-3 top-3 z-10 rounded-full bg-foreground/85 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-background shadow-soft">
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-foreground/85 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-background">
                     {typeLabel}
                   </span>
                 </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
           {COMPONENT_VISUALS.map((item, index) => (
             <li
               key={item.key}
-              className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
+              className="relative overflow-hidden rounded-2xl border border-border bg-card"
             >
               <AssetImage
                 asset={item.image}
@@ -158,10 +158,10 @@ export default function HomePage() {
               />
               <div className="p-6">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                     {index + 1}
                   </span>
-                  <h3 className="font-bold">{item.title}</h3>
+                  <h3 className="font-semibold">{item.title}</h3>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">{RECIPE[item.key]}</p>
               </div>
@@ -209,12 +209,12 @@ export default function HomePage() {
           {HOW_IT_WORKS.map((item, index) => {
             const Icon = item.icon;
             return (
-              <li key={item.title} className="flex items-start gap-3 rounded-xl border border-border bg-card p-5 shadow-soft">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <li key={item.title} className="flex items-start gap-3 rounded-xl border border-border bg-card p-5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <div>
-                  <p className="text-xs font-bold text-muted-foreground">Step {index + 1}</p>
+                  <p className="text-xs font-semibold text-muted-foreground">Step {index + 1}</p>
                   <h3 className="mt-0.5 font-semibold">{item.title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
                 </div>

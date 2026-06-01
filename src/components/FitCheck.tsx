@@ -15,7 +15,7 @@ export function FitCheck() {
   return (
     <div className="rounded-2xl border border-warning/40 bg-warning/10 p-6">
       <div className="flex items-center gap-2">
-        <Ruler className="h-5 w-5 text-warning-foreground" aria-hidden="true" />
+        <Ruler className="h-5 w-5 text-warning" aria-hidden="true" />
         <h3 className="type-card-title">Before you buy, check these 3 things</h3>
       </div>
       <ol className="mt-4 grid gap-2 sm:grid-cols-3">
@@ -32,7 +32,7 @@ export function FitCheck() {
         ))}
       </ol>
       <p className="mt-4 flex items-start gap-2 text-sm font-medium text-foreground/80">
-        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning-foreground" aria-hidden="true" />
+        <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
         If pipes block the middle, choose Pipe Maze instead.
       </p>
     </div>

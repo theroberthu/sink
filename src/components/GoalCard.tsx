@@ -22,7 +22,7 @@ export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
   const content = (
     <>
       <div className="flex items-center justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
           <Icon className="h-6 w-6" aria-hidden="true" />
         </span>
         {onSelect && selected ? (
@@ -50,9 +50,9 @@ export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
       onClick={() => onSelect(goal.id)}
       aria-pressed={selected}
       className={[
-        "h-full rounded-2xl border bg-card p-6 text-left text-card-foreground shadow-soft transition-all duration-150",
-        "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lift",
-        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
+        "h-full rounded-2xl border bg-card p-6 text-left text-card-foreground transition-colors duration-150",
+        "hover:border-foreground/30",
+        selected ? "border-primary ring-1 ring-primary" : "border-border",
       ].join(" ")}
     >
       {content}

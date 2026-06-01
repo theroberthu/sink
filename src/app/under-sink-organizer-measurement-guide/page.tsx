@@ -66,7 +66,7 @@ export default function MeasurementGuidePage() {
       <Section>
         <div className="rounded-2xl border border-warning/40 bg-warning/10 p-6 sm:p-8">
           <div className="flex items-center gap-2">
-            <TriangleAlert className="h-5 w-5 text-warning-foreground" aria-hidden="true" />
+            <TriangleAlert className="h-5 w-5 text-warning" aria-hidden="true" />
             <h2 className="type-card-title">One more tip</h2>
           </div>
           <p className="mt-2 leading-relaxed text-foreground/85">
