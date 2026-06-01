@@ -39,6 +39,8 @@ interface AssetImageProps {
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /** Render the overlay label larger and more prominent (used in the hero). */
+  largeLabel?: boolean;
 }
 
 /**
@@ -50,7 +52,13 @@ interface AssetImageProps {
  * loads, so there is never a broken image icon and never any layout shift. Drop a
  * real WebP at asset.src and it appears automatically, no code change needed.
  */
-export function AssetImage({ asset, className, sizes = "100vw", priority }: AssetImageProps) {
+export function AssetImage({
+  asset,
+  className,
+  sizes = "100vw",
+  priority,
+  largeLabel,
+}: AssetImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const Icon = ICON_BY_KEY[asset.iconKey] ?? ImageIcon;
@@ -86,7 +94,11 @@ export function AssetImage({ asset, className, sizes = "100vw", priority }: Asse
       ) : null}
 
       {asset.label ? (
-        <span className="absolute left-3 top-3 z-10 rounded-full bg-card/90 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-foreground shadow-soft">
+        <span
+          className={`absolute left-3 top-3 z-10 rounded-full bg-card/90 font-bold uppercase tracking-wide text-foreground shadow-soft ${
+            largeLabel ? "px-3.5 py-1.5 text-sm" : "px-2.5 py-1 text-xs"
+          }`}
+        >
           {asset.label}
         </span>
       ) : null}

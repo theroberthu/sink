@@ -61,6 +61,11 @@ const config: Config = {
           foreground: token("destructive-foreground"),
         },
         ring: token("ring"),
+        wood: {
+          DEFAULT: token("wood"),
+          dark: token("wood-dark"),
+          light: token("wood-light"),
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],

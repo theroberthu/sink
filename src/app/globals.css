@@ -39,6 +39,11 @@
   --destructive-foreground: 255 255 255;
 
   --ring: 28 109 208;
+
+  /* Cabinet frame wood tones, used for the hero cabinet treatment. */
+  --wood: 161 110 64;
+  --wood-dark: 122 79 43;
+  --wood-light: 199 154 106;
 }
 
 @layer base {

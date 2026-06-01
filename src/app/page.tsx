@@ -17,12 +17,26 @@ const BENEFITS = [
   { icon: Ruler, label: "Quick fit check" },
 ];
 
-// Short, punchy one liners for the image led mess cards on the homepage.
+// Diagnostic card copy for the mess type section. Short, one line each.
 const MESS_TAGLINES: Record<string, string> = {
-  "bottle-avalanche": "Stuff falls out.",
+  "bottle-avalanche": "Bags, bottles, and chaos.",
   "pipe-maze": "Pipes in the way.",
   "tiny-cabinet-energy": "No room to breathe.",
 };
+
+// The 3 piece reset recipe. One short line per role.
+const RECIPE: Record<string, string> = {
+  access: "Pull things out.",
+  protection: "Catch spills.",
+  control: "Group daily items.",
+};
+
+// Warning signs strip. Subtle and funny, exactly 3.
+const WARNING_SIGNS = [
+  "You buy cleaner twice because you cannot find the first one.",
+  "Plastic bags have formed their own ecosystem.",
+  "Something falls out every time you open the door.",
+];
 
 // How it works is secondary now. Kept compact and below the transformation content.
 const HOW_IT_WORKS = [
@@ -36,7 +50,7 @@ export default function HomePage() {
     <>
       <PageViewTracker event="landing_page_viewed" />
 
-      {/* Hero: two columns on desktop, stacked on mobile. Before and after dominates. */}
+      {/* Hero: two columns on desktop, stacked on mobile. Cabinet frame dominates. */}
       <section className="px-4 pb-6 pt-12 sm:pt-16">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
           <div>
@@ -50,7 +64,7 @@ export default function HomePage() {
                 Find My Cabinet Fix
               </TrackedCTALink>
               <CTALink href="#mess-types" variant="secondary">
-                See examples
+                See the mess types
               </CTALink>
             </div>
             <p className="type-small mt-4">No judgment. We have seen worse.</p>
@@ -79,26 +93,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mess type section, image led. */}
+      {/* Mess type section: diagnostic cards. */}
       <Section
         id="mess-types"
-        eyebrow="The 3 mess types"
+        eyebrow="Diagnose your cabinet"
         title="Which cabinet looks like yours?"
         description="Start with the mess you recognize."
       >
         <div className="grid gap-5 sm:grid-cols-3">
-          {MESS_TYPES.map((messType) => {
+          {MESS_TYPES.map((messType, index) => {
             const image = getMessImage(messType.id);
+            const typeLabel = `Cabinet Type 0${index + 1}`;
             return (
               <article
                 key={messType.id}
                 className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lift"
               >
-                <AssetImage
-                  asset={image}
-                  className="aspect-[4/3] w-full"
-                  sizes="(min-width: 640px) 30vw, 90vw"
-                />
+                <div className="relative">
+                  <AssetImage
+                    asset={image}
+                    className="aspect-[4/3] w-full"
+                    sizes="(min-width: 640px) 30vw, 90vw"
+                  />
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-foreground/85 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-background shadow-soft">
+                    {typeLabel}
+                  </span>
+                </div>
                 <div className="flex flex-1 flex-col p-5">
                   <h3 className="type-card-title">{messType.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -118,13 +138,18 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* Why 3 pieces is enough: simple, lower on the page. */}
-      <Section eyebrow="Why three" title="Why 3 pieces is enough" muted>
-        <div className="grid gap-5 sm:grid-cols-3">
-          {COMPONENT_VISUALS.map((item) => (
-            <div
+      {/* The 3 piece reset recipe: parts of one simple system. */}
+      <Section
+        eyebrow="The system"
+        title="The 3 piece reset recipe"
+        description="One piece for access. One for protection. One for control."
+        muted
+      >
+        <ol className="grid gap-5 sm:grid-cols-3">
+          {COMPONENT_VISUALS.map((item, index) => (
+            <li
               key={item.key}
-              className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
+              className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-soft"
             >
               <AssetImage
                 asset={item.image}
@@ -132,16 +157,32 @@ export default function HomePage() {
                 sizes="(min-width: 640px) 30vw, 90vw"
               />
               <div className="p-6">
-                <h3 className="font-bold">{item.title}</h3>
-                <p className="mt-0.5 text-xs font-semibold uppercase tracking-wide text-primary">
-                  {item.concept}
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">{item.copy}</p>
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                    {index + 1}
+                  </span>
+                  <h3 className="font-bold">{item.title}</h3>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">{RECIPE[item.key]}</p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
         <p className="type-small mt-6">Three pieces. One calmer cabinet.</p>
+      </Section>
+
+      {/* Personality strip: warning signs, exactly 3. */}
+      <Section eyebrow="Sound familiar?" title="Warning signs your cabinet needs help">
+        <ul className="grid gap-3 sm:grid-cols-3">
+          {WARNING_SIGNS.map((sign) => (
+            <li
+              key={sign}
+              className="rounded-2xl border border-accent/40 bg-accent/10 p-5 text-sm font-medium text-accent-foreground"
+            >
+              {sign}
+            </li>
+          ))}
+        </ul>
       </Section>
 
       {/* Quick fit reminder, before the process explanation. */}
