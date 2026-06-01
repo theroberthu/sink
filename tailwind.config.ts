@@ -53,6 +53,8 @@ const config: Config = {
           DEFAULT: token("success"),
           foreground: token("success-foreground"),
         },
+        cream: token("cream"),
+        sage: token("sage"),
         warning: {
           DEFAULT: token("warning"),
           foreground: token("warning-foreground"),
@@ -72,13 +74,15 @@ const config: Config = {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       borderRadius: {
+        // Warm and calm, not bubbly. Cards cap at 14px, buttons at 10 to 12px.
+        lg: "0.625rem",
         xl: "0.75rem",
-        "2xl": "1rem",
+        "2xl": "0.875rem",
       },
       boxShadow: {
-        // Restrained, modern shadows. Used sparingly.
-        soft: "0 1px 2px rgb(17 24 39 / 0.04)",
-        lift: "0 4px 16px rgb(17 24 39 / 0.08)",
+        // Matte. Borders do the work, shadows are a whisper.
+        soft: "0 1px 2px rgb(31 31 27 / 0.04)",
+        lift: "0 2px 8px rgb(31 31 27 / 0.06)",
       },
     },
   },

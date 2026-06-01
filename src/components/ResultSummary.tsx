@@ -71,7 +71,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
       {/* 3 piece setup. Grid on desktop, swipe on mobile. */}
       <div ref={productsRef}>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <h3 className="type-section-title">Your 3 piece setup</h3>
+          <h3 className="type-section-title">Start with these 3.</h3>
           <span className="type-small">No judgment. We have seen worse.</span>
         </div>
 

@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { AssetImage } from "@/components/AssetImage";
 import { getMessImage } from "@/lib/images";
 import type { MessType } from "@/lib/types";
@@ -23,11 +22,6 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
           className="aspect-[4/3] w-full"
           sizes="(min-width: 640px) 30vw, 90vw"
         />
-        {onSelect && selected ? (
-          <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-soft">
-            <Check className="h-4 w-4" aria-hidden="true" />
-          </span>
-        ) : null}
       </div>
       <div className="p-5">
         <h3 className="type-card-title">{messType.name}</h3>
@@ -49,12 +43,13 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
   );
 
   const shell =
-    "overflow-hidden rounded-2xl border bg-card text-card-foreground transition-colors duration-150";
+    "overflow-hidden rounded-2xl bg-card text-card-foreground transition-colors duration-150";
 
   if (!onSelect) {
-    return <article className={`${shell} border-border`}>{inner}</article>;
+    return <article className={`${shell} border border-border`}>{inner}</article>;
   }
 
+  // Selected state: 2px primary green border plus a soft sage wash. No glow.
   return (
     <button
       type="button"
@@ -62,8 +57,8 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
       aria-pressed={selected}
       className={[
         shell,
-        "h-full w-full text-left hover:border-foreground/30",
-        selected ? "border-primary ring-1 ring-primary" : "border-border",
+        "h-full w-full border-2 text-left",
+        selected ? "border-primary bg-sage" : "border-border hover:border-foreground/30",
       ].join(" ")}
     >
       {inner}

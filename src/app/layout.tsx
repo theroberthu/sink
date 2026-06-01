@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SITE } from "@/lib/site";
 
-const geist = Geist({
+const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={geist.variable}>
+    <html lang="en" className={manrope.variable}>
       <body>
         <a
           href="#main"

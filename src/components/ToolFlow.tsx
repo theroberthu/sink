@@ -14,7 +14,7 @@ import type { GoalId, MessTypeId } from "@/lib/types";
 
 type Step = 1 | 2 | 3;
 
-const STEP_LABELS = ["Your mess", "Your goal", "Your plan"];
+const STEP_LABELS = ["Mess", "Goal", "Fix"];
 
 // Three step guided flow: mess type, goal, result. Kept short so it feels like a
 // shortcut, not a quiz. Each step offers exactly 3 choices.

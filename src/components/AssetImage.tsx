@@ -95,8 +95,8 @@ export function AssetImage({
 
       {asset.label ? (
         <span
-          className={`absolute left-3 top-3 z-10 rounded-full bg-card/90 font-bold uppercase tracking-wide text-foreground shadow-soft ${
-            largeLabel ? "px-3.5 py-1.5 text-sm" : "px-2.5 py-1 text-xs"
+          className={`absolute left-3 top-3 z-10 rounded-lg border border-border bg-cream/95 font-medium tracking-wide text-foreground ${
+            largeLabel ? "px-3 py-1 text-sm" : "px-2.5 py-1 text-xs"
           }`}
         >
           {asset.label}

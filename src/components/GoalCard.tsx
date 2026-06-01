@@ -1,4 +1,4 @@
-import { Check, Hand, Maximize2, Sparkles, type LucideIcon } from "lucide-react";
+import { Hand, Maximize2, Sparkles, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/Card";
 import type { Goal, GoalId } from "@/lib/types";
 
@@ -22,14 +22,9 @@ export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
   const content = (
     <>
       <div className="flex items-center justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-primary">
+        <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-sage text-primary">
           <Icon className="h-6 w-6" aria-hidden="true" />
         </span>
-        {onSelect && selected ? (
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Check className="h-4 w-4" aria-hidden="true" />
-          </span>
-        ) : null}
       </div>
       <h3 className="type-card-title mt-4">{goal.name}</h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{goal.description}</p>
@@ -50,9 +45,8 @@ export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
       onClick={() => onSelect(goal.id)}
       aria-pressed={selected}
       className={[
-        "h-full rounded-2xl border bg-card p-6 text-left text-card-foreground transition-colors duration-150",
-        "hover:border-foreground/30",
-        selected ? "border-primary ring-1 ring-primary" : "border-border",
+        "h-full rounded-2xl border-2 p-6 text-left text-card-foreground transition-colors duration-150",
+        selected ? "border-primary bg-sage" : "border-border bg-card hover:border-foreground/30",
       ].join(" ")}
     >
       {content}

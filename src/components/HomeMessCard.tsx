@@ -22,8 +22,8 @@ export function HomeMessCard({ messType, index, tagline }: HomeMessCardProps) {
           className="aspect-[4/3] w-full"
           sizes="(min-width: 640px) 30vw, 90vw"
         />
-        <span className="absolute right-3 top-3 z-10 rounded-full bg-foreground/85 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-background">
-          {`Cabinet Type 0${index + 1}`}
+        <span className="absolute left-3 top-3 z-10 rounded-lg border border-border bg-cream/95 px-2.5 py-1 text-xs font-medium tracking-wide text-foreground">
+          {`Type 0${index + 1}`}
         </span>
       </div>
       <div className="flex flex-1 flex-col p-5">
