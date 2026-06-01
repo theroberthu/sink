@@ -6,6 +6,7 @@ import { MessTypeCard } from "@/components/MessTypeCard";
 import { GoalCard } from "@/components/GoalCard";
 import { ResultSummary } from "@/components/ResultSummary";
 import { ProgressIndicator } from "@/components/ProgressIndicator";
+import { Carousel } from "@/components/Carousel";
 import { track } from "@/lib/analytics";
 import { MESS_TYPES, getMessType } from "@/data/messTypes";
 import { GOALS, getGoal } from "@/data/goals";
@@ -50,7 +51,9 @@ export function ToolFlow() {
             Which mess looks most like yours?
           </h1>
           <p className="type-body mt-2">Pick the one closest to your cabinet. No judgment.</p>
-          <div className="mt-7 grid gap-5 sm:grid-cols-3">
+
+          {/* Desktop and up: three card grid. */}
+          <div className="mt-7 hidden gap-5 sm:grid sm:grid-cols-3">
             {MESS_TYPES.map((mess) => (
               <MessTypeCard
                 key={mess.id}
@@ -59,6 +62,21 @@ export function ToolFlow() {
                 selected={messTypeId === mess.id}
               />
             ))}
+          </div>
+
+          {/* Mobile: swipeable carousel, one card plus a peek of the next. */}
+          <div className="mt-7 sm:hidden">
+            <Carousel label="Cabinet mess types" slideWidth="peek">
+              {MESS_TYPES.map((mess) => (
+                <MessTypeCard
+                  key={mess.id}
+                  messType={mess}
+                  onSelect={handleMessSelect}
+                  selected={messTypeId === mess.id}
+                />
+              ))}
+            </Carousel>
+            <p className="mt-3 text-center text-xs text-muted-foreground">Swipe to compare</p>
           </div>
         </section>
       ) : null}
@@ -78,7 +96,7 @@ export function ToolFlow() {
           <button
             type="button"
             onClick={() => setStep(1)}
-            className="mt-7 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="mt-6 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back to mess type
@@ -95,7 +113,7 @@ export function ToolFlow() {
           <button
             type="button"
             onClick={() => setStep(2)}
-            className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="mt-8 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Change my goal

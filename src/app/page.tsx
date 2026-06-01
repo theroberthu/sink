@@ -7,7 +7,9 @@ import { HeroVisual } from "@/components/HeroVisual";
 import { CTASection } from "@/components/CTASection";
 import { Badge } from "@/components/Badge";
 import { AssetImage } from "@/components/AssetImage";
-import { COMPONENT_VISUALS, getMessImage } from "@/lib/images";
+import { Carousel } from "@/components/Carousel";
+import { HomeMessCard } from "@/components/HomeMessCard";
+import { COMPONENT_VISUALS } from "@/lib/images";
 import { MESS_TYPES } from "@/data/messTypes";
 
 // Compact benefit strip under the hero. Exactly 3 items.
@@ -93,48 +95,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mess type section: diagnostic cards. */}
+      {/* Mess type section: diagnostic cards. Grid on desktop, swipe on mobile. */}
       <Section
         id="mess-types"
         eyebrow="Diagnose your cabinet"
         title="Which cabinet looks like yours?"
         description="Start with the mess you recognize."
       >
-        <div className="grid gap-5 sm:grid-cols-3">
-          {MESS_TYPES.map((messType, index) => {
-            const image = getMessImage(messType.id);
-            const typeLabel = `Cabinet Type 0${index + 1}`;
-            return (
-              <article
+        {/* Desktop and up: three card grid. */}
+        <div className="hidden gap-5 sm:grid sm:grid-cols-3">
+          {MESS_TYPES.map((messType, index) => (
+            <HomeMessCard
+              key={messType.id}
+              messType={messType}
+              index={index}
+              tagline={MESS_TAGLINES[messType.id]}
+            />
+          ))}
+        </div>
+
+        {/* Mobile: swipeable carousel, one card plus a peek of the next. */}
+        <div className="sm:hidden">
+          <Carousel label="Cabinet mess types" slideWidth="peek">
+            {MESS_TYPES.map((messType, index) => (
+              <HomeMessCard
                 key={messType.id}
-                className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-150 hover:border-foreground/20"
-              >
-                <div className="relative">
-                  <AssetImage
-                    asset={image}
-                    className="aspect-[4/3] w-full"
-                    sizes="(min-width: 640px) 30vw, 90vw"
-                  />
-                  <span className="absolute right-3 top-3 z-10 rounded-full bg-foreground/85 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-background">
-                    {typeLabel}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="type-card-title">{messType.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {MESS_TAGLINES[messType.id]}
-                  </p>
-                  <TrackedCTALink
-                    href="/tool"
-                    event="find_fix_clicked"
-                    className="mt-4 w-full"
-                  >
-                    That&apos;s mine
-                  </TrackedCTALink>
-                </div>
-              </article>
-            );
-          })}
+                messType={messType}
+                index={index}
+                tagline={MESS_TAGLINES[messType.id]}
+              />
+            ))}
+          </Carousel>
+          <p className="mt-3 text-center text-xs text-muted-foreground">Swipe to compare</p>
         </div>
       </Section>
 

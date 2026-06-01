@@ -9,6 +9,7 @@ import { EmailCaptureForm } from "@/components/EmailCaptureForm";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { Badge } from "@/components/Badge";
 import { AssetImage } from "@/components/AssetImage";
+import { Carousel } from "@/components/Carousel";
 import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
@@ -67,13 +68,14 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
         </div>
       </div>
 
-      {/* 3 piece setup */}
+      {/* 3 piece setup. Grid on desktop, swipe on mobile. */}
       <div ref={productsRef}>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="type-section-title">Your 3 piece setup</h3>
           <span className="type-small">No judgment. We have seen worse.</span>
         </div>
-        <div className="mt-5 grid gap-5 sm:grid-cols-3">
+
+        <div className="mt-5 hidden gap-5 sm:grid sm:grid-cols-3">
           {products.map((product, index) => (
             <ProductCard
               key={product.id}
@@ -83,6 +85,20 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
               goal={goal.id}
             />
           ))}
+        </div>
+
+        <div className="mt-5 sm:hidden">
+          <Carousel label="Your 3 piece setup" slideWidth="peek">
+            {products.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                step={index + 1}
+                messType={messType.id}
+                goal={goal.id}
+              />
+            ))}
+          </Carousel>
         </div>
       </div>
 
