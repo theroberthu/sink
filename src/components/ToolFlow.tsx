@@ -121,7 +121,7 @@ export function ToolFlow() {
         <section aria-labelledby="step3-heading">
           <p className="type-caption text-primary">Step 3 of 3</p>
           <h2 id="step3-heading" className="type-page-title mt-1">
-            Start with these 3.
+            Your 3 Piece Fix
           </h2>
           <div className="mt-6">
             <ResultSummary messType={messType} goal={goal} />
