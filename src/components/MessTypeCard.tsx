@@ -7,11 +7,14 @@ interface MessTypeCardProps {
   /** When provided, the card becomes a selectable button (used in the tool). */
   onSelect?: (id: MessType["id"]) => void;
   selected?: boolean;
+  /** Compact shows only image, title, and one short line (used in the tool Step 1). */
+  compact?: boolean;
 }
 
 // Image led card for one mess type. The visual leads, copy stays short.
-// Static on content pages, selectable in the tool.
-export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps) {
+// Static on content pages, selectable in the tool. Compact mode keeps Step 1 light:
+// just image, title, and one short line, with product components saved for the result.
+export function MessTypeCard({ messType, onSelect, selected, compact }: MessTypeCardProps) {
   const image = getMessImage(messType.id);
 
   const inner = (
@@ -25,19 +28,25 @@ export function MessTypeCard({ messType, onSelect, selected }: MessTypeCardProps
       </div>
       <div className="p-5">
         <h3 className="type-card-title">{messType.name}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-          {messType.shortDescription}
-        </p>
-        <ul className="mt-3 flex flex-wrap gap-1.5">
-          {messType.components.map((component) => (
-            <li
-              key={component}
-              className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
-            >
-              {component}
-            </li>
-          ))}
-        </ul>
+        {compact ? (
+          <p className="mt-1 text-sm text-muted-foreground">{messType.tagline}</p>
+        ) : (
+          <>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              {messType.shortDescription}
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-1.5">
+              {messType.components.map((component) => (
+                <li
+                  key={component}
+                  className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
+                >
+                  {component}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </>
   );

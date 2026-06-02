@@ -18,6 +18,8 @@ export interface MessType {
   id: MessTypeId;
   name: string;
   shortDescription: string;
+  /** One short line for compact cards, for example "Bags, bottles, and chaos." */
+  tagline: string;
   diagnosis: string;
   /** Bundle style name for the result page, for example "Bottle Avalanche Setup". */
   setupName: string;

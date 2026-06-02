@@ -1,4 +1,4 @@
-import { Clock, Boxes, Ruler, MousePointerClick, ListChecks, Sparkles } from "lucide-react";
+import { Clock, Boxes, Ruler } from "lucide-react";
 import { Section } from "@/components/Section";
 import { CTALink } from "@/components/CTAButton";
 import { TrackedCTALink } from "@/components/TrackedCTALink";
@@ -19,33 +19,12 @@ const BENEFITS = [
   { icon: Ruler, label: "Quick fit check" },
 ];
 
-// Diagnostic card copy for the mess type section. Short, one line each.
-const MESS_TAGLINES: Record<string, string> = {
-  "bottle-avalanche": "Bags, bottles, and chaos.",
-  "pipe-maze": "Pipes in the way.",
-  "tiny-cabinet-energy": "No room to breathe.",
-};
-
 // The 3 piece reset recipe. One short line per role.
 const RECIPE: Record<string, string> = {
   access: "Pull things out.",
   protection: "Catch spills.",
   control: "Group daily items.",
 };
-
-// Warning signs strip. Subtle and funny, exactly 3.
-const WARNING_SIGNS = [
-  "You buy cleaner twice because you cannot find the first one.",
-  "Plastic bags have formed their own ecosystem.",
-  "Something falls out every time you open the door.",
-];
-
-// How it works is secondary now. Kept compact and below the transformation content.
-const HOW_IT_WORKS = [
-  { icon: MousePointerClick, title: "Pick your mess", body: "Choose the scene that looks like yours." },
-  { icon: ListChecks, title: "Pick your goal", body: "Tell us what would make it better." },
-  { icon: Sparkles, title: "Get your 3 piece fix", body: "See the three pieces that fix it." },
-];
 
 export default function HomePage() {
   return (
@@ -102,38 +81,27 @@ export default function HomePage() {
         title="Which cabinet looks like yours?"
         description="Start with the mess you recognize."
       >
-        {/* Desktop and up: three card grid. */}
-        <div className="hidden gap-5 sm:grid sm:grid-cols-3">
+        {/* Desktop: three card grid. Mobile: swipeable carousel. Only one shows per breakpoint. */}
+        <div className="hidden gap-5 md:grid md:grid-cols-3">
           {MESS_TYPES.map((messType, index) => (
-            <HomeMessCard
-              key={messType.id}
-              messType={messType}
-              index={index}
-              tagline={MESS_TAGLINES[messType.id]}
-            />
+            <HomeMessCard key={messType.id} messType={messType} index={index} />
           ))}
         </div>
 
-        {/* Mobile: swipeable carousel, one card plus a peek of the next. */}
-        <div className="sm:hidden">
+        <div className="md:hidden">
           <Carousel label="Cabinet mess types" slideWidth="peek">
             {MESS_TYPES.map((messType, index) => (
-              <HomeMessCard
-                key={messType.id}
-                messType={messType}
-                index={index}
-                tagline={MESS_TAGLINES[messType.id]}
-              />
+              <HomeMessCard key={messType.id} messType={messType} index={index} />
             ))}
           </Carousel>
           <p className="mt-3 text-center text-xs text-muted-foreground">Swipe to compare</p>
         </div>
       </Section>
 
-      {/* The 3 piece reset recipe: parts of one simple system. */}
+      {/* Your fix starts with 3 things: parts of one simple system. */}
       <Section
         eyebrow="The system"
-        title="The 3 piece reset recipe"
+        title="Your fix starts with 3 things"
         description="One piece for access. One for protection. One for control."
         muted
       >
@@ -163,21 +131,7 @@ export default function HomePage() {
         <p className="type-small mt-6">Three pieces. One calmer cabinet.</p>
       </Section>
 
-      {/* Personality strip: warning signs, exactly 3. */}
-      <Section eyebrow="Sound familiar?" title="Warning signs your cabinet needs help">
-        <ul className="grid gap-3 sm:grid-cols-3">
-          {WARNING_SIGNS.map((sign) => (
-            <li
-              key={sign}
-              className="rounded-2xl border border-accent/40 bg-accent/10 p-5 text-sm font-medium text-accent-foreground"
-            >
-              {sign}
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {/* Quick fit reminder, before the process explanation. */}
+      {/* Quick fit reminder. */}
       <Section>
         <div className="rounded-2xl border border-warning/40 bg-warning/10 p-6 sm:p-8">
           <h2 className="type-card-title">Quick fit reminder</h2>
@@ -193,27 +147,6 @@ export default function HomePage() {
             Read the measurement guide
           </CTALink>
         </div>
-      </Section>
-
-      {/* How it works, now secondary and lightweight. */}
-      <Section id="how-it-works" eyebrow="How it works" title="Three quick steps">
-        <ol className="grid gap-4 sm:grid-cols-3">
-          {HOW_IT_WORKS.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <li key={item.title} className="flex items-start gap-3 rounded-xl border border-border bg-card p-5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="text-xs font-semibold text-muted-foreground">Step {index + 1}</p>
-                  <h3 className="mt-0.5 font-semibold">{item.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{item.body}</p>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
       </Section>
 
       {/* CTA section */}

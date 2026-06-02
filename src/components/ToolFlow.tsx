@@ -48,24 +48,24 @@ export function ToolFlow() {
         <section aria-labelledby="step1-heading">
           <p className="type-caption text-primary">Step 1 of 3</p>
           <h1 id="step1-heading" className="type-page-title mt-1">
-            Which mess looks most like yours?
+            Pick your mess.
           </h1>
-          <p className="type-body mt-2">Pick the one closest to your cabinet. No judgment.</p>
+          <p className="type-body mt-2">Closest match is good enough.</p>
 
-          {/* Desktop and up: three card grid. */}
-          <div className="mt-7 hidden gap-5 sm:grid sm:grid-cols-3">
+          {/* Desktop: three card grid. Mobile: swipeable carousel. Only one shows per breakpoint. */}
+          <div className="mt-7 hidden gap-5 md:grid md:grid-cols-3">
             {MESS_TYPES.map((mess) => (
               <MessTypeCard
                 key={mess.id}
                 messType={mess}
                 onSelect={handleMessSelect}
                 selected={messTypeId === mess.id}
+                compact
               />
             ))}
           </div>
 
-          {/* Mobile: swipeable carousel, one card plus a peek of the next. */}
-          <div className="mt-7 sm:hidden">
+          <div className="mt-7 md:hidden">
             <Carousel label="Cabinet mess types" slideWidth="peek">
               {MESS_TYPES.map((mess) => (
                 <MessTypeCard
@@ -73,6 +73,7 @@ export function ToolFlow() {
                   messType={mess}
                   onSelect={handleMessSelect}
                   selected={messTypeId === mess.id}
+                  compact
                 />
               ))}
             </Carousel>

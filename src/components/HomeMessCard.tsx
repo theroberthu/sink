@@ -5,14 +5,13 @@ import type { MessType } from "@/lib/types";
 
 interface HomeMessCardProps {
   messType: MessType;
-  /** 1 based position, shown as Cabinet Type 0X. */
+  /** 1 based position, shown as Type 0X. */
   index: number;
-  tagline: string;
 }
 
 // Diagnostic mess card used on the homepage in both the desktop grid and the
 // mobile carousel. Big image, short copy, clear full width CTA.
-export function HomeMessCard({ messType, index, tagline }: HomeMessCardProps) {
+export function HomeMessCard({ messType, index }: HomeMessCardProps) {
   const image = getMessImage(messType.id);
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-150 hover:border-foreground/20">
@@ -28,7 +27,7 @@ export function HomeMessCard({ messType, index, tagline }: HomeMessCardProps) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         <h3 className="type-card-title">{messType.name}</h3>
-        <p className="mt-1 text-sm text-muted-foreground">{tagline}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{messType.tagline}</p>
         <TrackedCTALink
           href="/tool"
           event="find_fix_clicked"

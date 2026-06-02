@@ -7,6 +7,7 @@ export const MESS_TYPES: MessType[] = [
     name: "Bottle Avalanche",
     shortDescription:
       "Sprays, soaps, trash bags, dishwasher pods, and one mystery bottle from 2019.",
+    tagline: "Bags, bottles, and chaos.",
     diagnosis:
       "You have plenty of stuff and not enough front row seating. The fix is to pull everything forward so the back row stops swallowing your bottles.",
     setupName: "Bottle Avalanche Setup",
@@ -25,6 +26,7 @@ export const MESS_TYPES: MessType[] = [
     name: "Pipe Maze",
     shortDescription:
       "Pipes, garbage disposal, and awkward dead space that make normal organizers annoying.",
+    tagline: "Pipes in the way.",
     diagnosis:
       "The plumbing owns the middle of your cabinet. The fix is to work around it with narrow pieces that claim the sides instead of fighting the pipes.",
     setupName: "Pipe Maze Setup",
@@ -43,6 +45,7 @@ export const MESS_TYPES: MessType[] = [
     name: "Tiny Cabinet Energy",
     shortDescription:
       "Small cabinet, limited room, and everything stacked like a bad game of Jenga.",
+    tagline: "No room to breathe.",
     diagnosis:
       "You are short on floor space, so the answer is up. The fix stacks vertically and keeps the footprint slim so nothing topples.",
     setupName: "Tiny Cabinet Setup",
