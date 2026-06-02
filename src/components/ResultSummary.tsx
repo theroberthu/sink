@@ -14,11 +14,11 @@ import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
 import { getProductsForMessType } from "@/data/products";
-import { GOALS } from "@/data/goals";
-import type { GoalId, MessType, ProductRole } from "@/lib/types";
+import type { Goal, MessType, ProductRole } from "@/lib/types";
 
 interface ResultSummaryProps {
   messType: MessType;
+  goal: Goal;
 }
 
 const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
@@ -27,33 +27,32 @@ const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
   Control: LayoutGrid,
 };
 
-const DEFAULT_GOAL: GoalId = "easy-reach";
-
-// Result page: one curated 3 piece setup with a compact goal selector near the top.
-// Changing the goal updates state and tracking without navigating away. Honest that
-// V1 uses affiliate links for individual products.
-export function ResultSummary({ messType }: ResultSummaryProps) {
-  const [goalId, setGoalId] = useState<GoalId>(DEFAULT_GOAL);
+// Fix section of the continuous tool workspace: one curated 3 piece setup. The goal
+// is chosen above this in ToolFlow. Honest that V1 uses affiliate links for products.
+export function ResultSummary({ messType, goal }: ResultSummaryProps) {
   const [showEmail, setShowEmail] = useState(false);
   const productsRef = useRef<HTMLDivElement>(null);
   const waitlistRef = useRef<HTMLDivElement>(null);
 
   const products = getProductsForMessType(messType.id, messType.components);
   const messImage = getMessImage(messType.id);
-  const goal = GOALS.find((g) => g.id === goalId) ?? GOALS[0];
-  const resultType = `${messType.id}__${goalId}`;
+  const resultType = `${messType.id}__${goal.id}`;
 
-  // Fire result_viewed once when the fix page loads for this mess type.
+  // Fire result_viewed once when the fix section appears for this mess type.
   useEffect(() => {
-    track("result_viewed", { mess_type: messType.id, goal: DEFAULT_GOAL, result_type: `${messType.id}__${DEFAULT_GOAL}` });
-    void recordSession({ messType: messType.id, goal: DEFAULT_GOAL, resultType: `${messType.id}__${DEFAULT_GOAL}` });
+    track("result_viewed", {
+      mess_type: messType.id,
+      goal: goal.id,
+      result_type: `${messType.id}__${goal.id}`,
+    });
+    void recordSession({
+      messType: messType.id,
+      goal: goal.id,
+      resultType: `${messType.id}__${goal.id}`,
+    });
+    // Intentionally keyed on mess type only so changing the goal does not refire.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messType.id]);
-
-  function handleGoalChange(id: GoalId) {
-    if (id === goalId) return;
-    setGoalId(id);
-    track("goal_selected", { goal: id, mess_type: messType.id });
-  }
 
   function scrollTo(ref: React.RefObject<HTMLDivElement | null>) {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -83,37 +82,6 @@ export function ResultSummary({ messType }: ResultSummaryProps) {
             </p>
           </div>
         </div>
-
-        {/* Compact goal selector. Changing it updates state and tracking, no navigation. */}
-        <fieldset className="mt-6">
-          <legend className="type-label">What matters most?</legend>
-          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {GOALS.map((g) => {
-              const active = g.id === goalId;
-              return (
-                <label
-                  key={g.id}
-                  className={[
-                    "flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg border px-3 py-2 text-center text-sm font-medium transition-colors",
-                    active
-                      ? "border-primary bg-sage text-foreground"
-                      : "border-border bg-card hover:border-foreground/30",
-                  ].join(" ")}
-                >
-                  <input
-                    type="radio"
-                    name="goal"
-                    value={g.id}
-                    checked={active}
-                    onChange={() => handleGoalChange(g.id)}
-                    className="sr-only"
-                  />
-                  {g.name}
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
 
         {/* Three component cards: Access, Protection, Control */}
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -160,7 +128,7 @@ export function ResultSummary({ messType }: ResultSummaryProps) {
               step={index + 1}
               setupName={messType.setupName}
               messType={messType.id}
-              goal={goalId}
+              goal={goal.id}
             />
           ))}
         </div>
@@ -174,7 +142,7 @@ export function ResultSummary({ messType }: ResultSummaryProps) {
                 step={index + 1}
                 setupName={messType.setupName}
                 messType={messType.id}
-                goal={goalId}
+                goal={goal.id}
               />
             ))}
           </Carousel>
@@ -202,7 +170,7 @@ export function ResultSummary({ messType }: ResultSummaryProps) {
 
         {showEmail ? (
           <div className="mt-4">
-            <EmailCaptureForm messType={messType.id} goal={goalId} resultType={resultType} />
+            <EmailCaptureForm messType={messType.id} goal={goal.id} resultType={resultType} />
           </div>
         ) : null}
       </div>
@@ -217,7 +185,7 @@ export function ResultSummary({ messType }: ResultSummaryProps) {
           separately.
         </p>
         <div className="mt-5">
-          <WaitlistForm messType={messType.id} goal={goalId} bare />
+          <WaitlistForm messType={messType.id} goal={goal.id} bare />
         </div>
       </div>
     </div>
