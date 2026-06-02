@@ -73,8 +73,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
               <Badge tone="accent">{messType.name}</Badge>
               <Badge tone="primary">{goal.name}</Badge>
             </div>
-            <h2 className="type-page-title mt-3">Your 3 Piece Fix</h2>
-            <p className="mt-2 text-lg font-semibold text-foreground">{messType.setupName}</p>
+            <p className="mt-3 text-xl font-semibold text-foreground">{messType.setupName}</p>
             <p className="mt-1 text-sm text-muted-foreground">Best for: {messType.bestFor}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Buy the pieces separately today. Join the waitlist if you want this as one ready to go

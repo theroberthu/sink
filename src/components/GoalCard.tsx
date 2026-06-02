@@ -7,6 +7,8 @@ interface GoalCardProps {
   /** When provided, the card becomes a selectable button (used in the tool). */
   onSelect?: (id: Goal["id"]) => void;
   selected?: boolean;
+  /** Compact shows the short tagline instead of the full description (tool Step 2). */
+  compact?: boolean;
 }
 
 const GOAL_ICONS: Record<GoalId, LucideIcon> = {
@@ -15,19 +17,19 @@ const GOAL_ICONS: Record<GoalId, LucideIcon> = {
   "cleaner-look": Sparkles,
 };
 
-// Large card describing one user goal. Static on content pages, selectable in the tool.
-export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
+// Card describing one user goal. Static on content pages, selectable in the tool.
+export function GoalCard({ goal, onSelect, selected, compact }: GoalCardProps) {
   const Icon = GOAL_ICONS[goal.id];
 
   const content = (
     <>
-      <div className="flex items-center justify-between">
-        <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-sage text-primary">
-          <Icon className="h-6 w-6" aria-hidden="true" />
-        </span>
-      </div>
+      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-sage text-primary">
+        <Icon className="h-6 w-6" aria-hidden="true" />
+      </span>
       <h3 className="type-card-title mt-4">{goal.name}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{goal.description}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+        {compact ? goal.tagline : goal.description}
+      </p>
     </>
   );
 

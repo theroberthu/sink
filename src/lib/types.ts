@@ -37,6 +37,8 @@ export interface Goal {
   id: GoalId;
   name: string;
   description: string;
+  /** One short line for compact selectable cards, for example "Stop digging." */
+  tagline: string;
 }
 
 /** Role of a piece within the 3 piece setup. Drives the card label. */

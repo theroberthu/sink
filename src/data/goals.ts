@@ -6,16 +6,19 @@ export const GOALS: Goal[] = [
     id: "easy-reach",
     name: "Easy Reach",
     description: "I want to stop digging for the bottle I need.",
+    tagline: "Stop digging.",
   },
   {
     id: "more-space",
     name: "More Space",
     description: "I want to use the cabinet space better.",
+    tagline: "Use the height.",
   },
   {
     id: "cleaner-look",
     name: "Cleaner Look",
     description: "I want it to look less chaotic every time I open it.",
+    tagline: "Calm it down.",
   },
 ];
 
