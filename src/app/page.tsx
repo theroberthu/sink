@@ -41,10 +41,14 @@ export default function HomePage() {
               Pick your mess and get a 3 piece fix in under a minute.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <TrackedCTALink href="/tool" event="find_fix_clicked">
+              <TrackedCTALink
+                href="/tool"
+                event="find_fix_clicked"
+                className="w-full sm:w-auto"
+              >
                 Find My Cabinet Fix
               </TrackedCTALink>
-              <CTALink href="#mess-types" variant="secondary">
+              <CTALink href="#mess-types" variant="secondary" className="w-full sm:w-auto">
                 See the mess types
               </CTALink>
             </div>

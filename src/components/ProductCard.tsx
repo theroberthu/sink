@@ -53,7 +53,7 @@ export function ProductCard({ product, step, setupName, messType, goal }: Produc
         ) : null}
       </div>
       <p className="type-caption mt-4">{product.componentType}</p>
-      <h3 className="mt-1 text-lg font-semibold tracking-[-0.01em]">{product.productName}</h3>
+      <h3 className="mt-1 text-lg font-semibold">{product.productName}</h3>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{product.reason}</p>
       <div className="mt-4 flex items-center justify-between text-sm">
         <span className="text-base font-semibold">{product.price}</span>

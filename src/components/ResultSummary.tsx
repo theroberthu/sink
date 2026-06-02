@@ -14,11 +14,11 @@ import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
 import { getProductsForMessType } from "@/data/products";
-import type { Goal, MessType, ProductRole } from "@/lib/types";
+import { GOALS } from "@/data/goals";
+import type { GoalId, MessType, ProductRole } from "@/lib/types";
 
 interface ResultSummaryProps {
   messType: MessType;
-  goal: Goal;
 }
 
 const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
@@ -27,21 +27,33 @@ const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
   Control: LayoutGrid,
 };
 
-// Result page: one curated 3 piece setup, honest that V1 uses affiliate links for
-// individual products. Setup overview, product cards, and a kit waitlist.
-export function ResultSummary({ messType, goal }: ResultSummaryProps) {
+const DEFAULT_GOAL: GoalId = "easy-reach";
+
+// Result page: one curated 3 piece setup with a compact goal selector near the top.
+// Changing the goal updates state and tracking without navigating away. Honest that
+// V1 uses affiliate links for individual products.
+export function ResultSummary({ messType }: ResultSummaryProps) {
+  const [goalId, setGoalId] = useState<GoalId>(DEFAULT_GOAL);
   const [showEmail, setShowEmail] = useState(false);
   const productsRef = useRef<HTMLDivElement>(null);
   const waitlistRef = useRef<HTMLDivElement>(null);
 
   const products = getProductsForMessType(messType.id, messType.components);
   const messImage = getMessImage(messType.id);
-  const resultType = `${messType.id}__${goal.id}`;
+  const goal = GOALS.find((g) => g.id === goalId) ?? GOALS[0];
+  const resultType = `${messType.id}__${goalId}`;
 
+  // Fire result_viewed once when the fix page loads for this mess type.
   useEffect(() => {
-    track("result_viewed", { mess_type: messType.id, goal: goal.id, result_type: resultType });
-    void recordSession({ messType: messType.id, goal: goal.id, resultType });
-  }, [messType.id, goal.id, resultType]);
+    track("result_viewed", { mess_type: messType.id, goal: DEFAULT_GOAL, result_type: `${messType.id}__${DEFAULT_GOAL}` });
+    void recordSession({ messType: messType.id, goal: DEFAULT_GOAL, resultType: `${messType.id}__${DEFAULT_GOAL}` });
+  }, [messType.id]);
+
+  function handleGoalChange(id: GoalId) {
+    if (id === goalId) return;
+    setGoalId(id);
+    track("goal_selected", { goal: id, mess_type: messType.id });
+  }
 
   function scrollTo(ref: React.RefObject<HTMLDivElement | null>) {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -49,7 +61,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
   return (
     <div className="space-y-8">
-      {/* 1 to 5: curated setup overview */}
+      {/* Curated setup overview */}
       <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
         <div className="flex flex-col gap-6 sm:flex-row">
           <AssetImage
@@ -72,15 +84,43 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
           </div>
         </div>
 
+        {/* Compact goal selector. Changing it updates state and tracking, no navigation. */}
+        <fieldset className="mt-6">
+          <legend className="type-label">What matters most?</legend>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {GOALS.map((g) => {
+              const active = g.id === goalId;
+              return (
+                <label
+                  key={g.id}
+                  className={[
+                    "flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg border px-3 py-2 text-center text-sm font-medium transition-colors",
+                    active
+                      ? "border-primary bg-sage text-foreground"
+                      : "border-border bg-card hover:border-foreground/30",
+                  ].join(" ")}
+                >
+                  <input
+                    type="radio"
+                    name="goal"
+                    value={g.id}
+                    checked={active}
+                    onChange={() => handleGoalChange(g.id)}
+                    className="sr-only"
+                  />
+                  {g.name}
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+
         {/* Three component cards: Access, Protection, Control */}
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {products.map((product) => {
             const Icon = ROLE_ICON[product.role];
             return (
-              <div
-                key={product.id}
-                className="rounded-xl border border-border bg-cream p-5"
-              >
+              <div key={product.id} className="rounded-xl border border-border bg-cream p-5">
                 <div className="flex items-center gap-2">
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage text-primary">
                     <Icon className="h-4 w-4" aria-hidden="true" />
@@ -100,7 +140,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
         </CTAButton>
       </div>
 
-      {/* 6: product cards section */}
+      {/* Product cards section */}
       <div ref={productsRef}>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="type-section-title">Shop the pieces</h3>
@@ -112,7 +152,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
           Some product links may earn us a commission at no extra cost to you.
         </p>
 
-        <div className="mt-5 hidden gap-5 sm:grid sm:grid-cols-3">
+        <div className="mt-5 hidden gap-5 md:grid md:grid-cols-3">
           {products.map((product, index) => (
             <ProductCard
               key={product.id}
@@ -120,12 +160,12 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
               step={index + 1}
               setupName={messType.setupName}
               messType={messType.id}
-              goal={goal.id}
+              goal={goalId}
             />
           ))}
         </div>
 
-        <div className="mt-5 sm:hidden">
+        <div className="mt-5 md:hidden">
           <Carousel label="The 3 pieces" slideWidth="peek">
             {products.map((product, index) => (
               <ProductCard
@@ -134,23 +174,27 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
                 step={index + 1}
                 setupName={messType.setupName}
                 messType={messType.id}
-                goal={goal.id}
+                goal={goalId}
               />
             ))}
           </Carousel>
         </div>
 
-        {/* 7 and 8: secondary and tertiary CTAs */}
+        {/* Secondary and tertiary CTAs. Full width on mobile. */}
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <CTAButton
             variant="secondary"
-            className="flex-1"
+            className="w-full sm:flex-1"
             onClick={() => setShowEmail((open) => !open)}
           >
             <Mail className="h-5 w-5" aria-hidden="true" />
             Send Me This Plan
           </CTAButton>
-          <CTAButton variant="secondary" className="flex-1" onClick={() => scrollTo(waitlistRef)}>
+          <CTAButton
+            variant="secondary"
+            className="w-full sm:flex-1"
+            onClick={() => scrollTo(waitlistRef)}
+          >
             <PackageOpen className="h-5 w-5" aria-hidden="true" />
             Want it as one kit?
           </CTAButton>
@@ -158,7 +202,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
         {showEmail ? (
           <div className="mt-4">
-            <EmailCaptureForm messType={messType.id} goal={goal.id} resultType={resultType} />
+            <EmailCaptureForm messType={messType.id} goal={goalId} resultType={resultType} />
           </div>
         ) : null}
       </div>
@@ -173,7 +217,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
           separately.
         </p>
         <div className="mt-5">
-          <WaitlistForm messType={messType.id} goal={goal.id} bare />
+          <WaitlistForm messType={messType.id} goal={goalId} bare />
         </div>
       </div>
     </div>
