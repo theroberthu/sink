@@ -9,25 +9,30 @@ interface ProductCardProps {
   product: Product;
   /** Optional step number for the 1 of 3 setup layout. */
   step?: number;
+  /** Bundle setup name, sent with the click event. */
+  setupName?: string;
   /** Context for click tracking. Optional so the card can render on content pages too. */
   messType?: MessTypeId;
   goal?: GoalId;
 }
 
 const ROLE_TONE: Record<ProductRole, "primary" | "success" | "accent"> = {
-  "Main fix": "primary",
-  "Cabinet protection": "success",
-  "Grab and go": "accent",
+  Access: "primary",
+  Protection: "success",
+  Control: "accent",
 };
 
-// Product recommendation card. Clicking View Product fires tracking, then opens the link.
-export function ProductCard({ product, step, messType, goal }: ProductCardProps) {
+// Product recommendation card. Clicking the view button fires tracking, then opens
+// the single affiliate link. One tab only, never multiple.
+export function ProductCard({ product, step, setupName, messType, goal }: ProductCardProps) {
   async function handleClick() {
     // Fire and forget tracking. We open the link regardless so the user is never blocked.
     if (messType && goal) {
       void trackProductClick({
         messType,
         goal,
+        setupName: setupName ?? "",
+        role: product.role,
         componentType: product.componentType,
         productName: product.productName,
         retailer: product.retailer,
@@ -57,9 +62,9 @@ export function ProductCard({ product, step, messType, goal }: ProductCardProps)
       <button
         type="button"
         onClick={handleClick}
-        className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary-hover"
+        className="mt-4 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary-hover"
       >
-        View Product
+        {product.viewLabel}
         <ExternalLink className="h-4 w-4" aria-hidden="true" />
       </button>
     </article>

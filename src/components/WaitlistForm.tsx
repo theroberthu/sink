@@ -14,6 +14,8 @@ const PRIORITY_OPTIONS = ["Fits my cabinet", "Looks clean", "Easy to install"];
 interface WaitlistFormProps {
   messType?: MessTypeId | null;
   goal?: GoalId | null;
+  /** When true, drops the card chrome and heading so it can sit inside another card. */
+  bare?: boolean;
 }
 
 // Reusable radio group rendered as accessible selectable chips.
@@ -64,7 +66,7 @@ function ChipGroup({
 }
 
 // Three question kit waitlist. Email is optional. Fires waitlist_started on first interaction.
-export function WaitlistForm({ messType, goal }: WaitlistFormProps) {
+export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
   const [desiredKit, setDesiredKit] = useState(KIT_OPTIONS[0]);
@@ -119,12 +121,14 @@ export function WaitlistForm({ messType, goal }: WaitlistFormProps) {
     <form
       onSubmit={handleSubmit}
       onFocus={markStarted}
-      className="rounded-2xl border border-border bg-card p-6 shadow-soft"
+      className={bare ? "" : "rounded-2xl border border-border bg-card p-6"}
     >
-      <div className="flex items-center gap-2">
-        <PackageOpen className="h-5 w-5 text-primary" aria-hidden="true" />
-        <h3 className="type-card-title">Join the Kit Waitlist</h3>
-      </div>
+      {bare ? null : (
+        <div className="flex items-center gap-2">
+          <PackageOpen className="h-5 w-5 text-primary" aria-hidden="true" />
+          <h3 className="type-card-title">Join the Kit Waitlist</h3>
+        </div>
+      )}
 
       <ChipGroup
         legend="Which kit would you want most?"

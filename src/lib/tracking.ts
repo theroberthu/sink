@@ -5,7 +5,7 @@
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
 import { track } from "@/lib/analytics";
 import { getSessionId } from "@/lib/session";
-import type { ComponentType, GoalId, MessTypeId } from "@/lib/types";
+import type { ComponentType, GoalId, MessTypeId, ProductRole } from "@/lib/types";
 
 function warnNotConfigured(action: string): void {
   if (process.env.NODE_ENV !== "production") {
@@ -43,6 +43,8 @@ export async function recordSession(record: Omit<SessionRecord, "sessionId">): P
 export interface ProductClickPayload {
   messType: MessTypeId;
   goal: GoalId;
+  setupName: string;
+  role: ProductRole;
   componentType: ComponentType;
   productName: string;
   retailer: string;
@@ -59,9 +61,12 @@ export async function trackProductClick(payload: ProductClickPayload): Promise<s
   track("product_clicked", {
     mess_type: payload.messType,
     goal: payload.goal,
+    setup_name: payload.setupName,
+    role: payload.role,
     component_type: payload.componentType,
     product_name: payload.productName,
     retailer: payload.retailer,
+    affiliate_url: payload.affiliateUrl,
   });
 
   if (!isSupabaseConfigured()) {

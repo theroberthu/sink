@@ -15,7 +15,7 @@ interface BadgeProps {
   className?: string;
 }
 
-// Small status pill. Used for product roles (Main fix, Cabinet protection, Grab and go).
+// Small status pill. Used for product roles (Access, Protection, Control).
 export function Badge({ children, tone = "muted", className }: BadgeProps) {
   return (
     <span

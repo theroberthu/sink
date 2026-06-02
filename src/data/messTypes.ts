@@ -9,6 +9,8 @@ export const MESS_TYPES: MessType[] = [
       "Sprays, soaps, trash bags, dishwasher pods, and one mystery bottle from 2019.",
     diagnosis:
       "You have plenty of stuff and not enough front row seating. The fix is to pull everything forward so the back row stops swallowing your bottles.",
+    setupName: "Bottle Avalanche Setup",
+    bestFor: "Bags, bottles, and cleaning chaos.",
     whoFor:
       "For cabinets packed with sprays and soaps where the thing you need is always hiding in the back.",
     fitConsiderations: [
@@ -25,6 +27,8 @@ export const MESS_TYPES: MessType[] = [
       "Pipes, garbage disposal, and awkward dead space that make normal organizers annoying.",
     diagnosis:
       "The plumbing owns the middle of your cabinet. The fix is to work around it with narrow pieces that claim the sides instead of fighting the pipes.",
+    setupName: "Pipe Maze Setup",
+    bestFor: "Pipes, garbage disposal, and awkward dead space.",
     whoFor:
       "For cabinets where pipes or a garbage disposal sit dead center and block normal organizers.",
     fitConsiderations: [
@@ -41,6 +45,8 @@ export const MESS_TYPES: MessType[] = [
       "Small cabinet, limited room, and everything stacked like a bad game of Jenga.",
     diagnosis:
       "You are short on floor space, so the answer is up. The fix stacks vertically and keeps the footprint slim so nothing topples.",
+    setupName: "Tiny Cabinet Setup",
+    bestFor: "Small cabinets and stacked supplies.",
     whoFor:
       "For small cabinets where there is no floor space left and everything stacks into a tower.",
     fitConsiderations: [
@@ -48,7 +54,7 @@ export const MESS_TYPES: MessType[] = [
       "Keep the footprint slim so the door still closes.",
       "Check that stacked trays clear the pipes.",
     ],
-    components: ["Slim Organizer", "Stackable Tray", "Waterproof Cabinet Liner"],
+    components: ["Slim Organizer", "Waterproof Cabinet Liner", "Stackable Tray"],
   },
 ];
 

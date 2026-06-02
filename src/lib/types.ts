@@ -19,6 +19,10 @@ export interface MessType {
   name: string;
   shortDescription: string;
   diagnosis: string;
+  /** Bundle style name for the result page, for example "Bottle Avalanche Setup". */
+  setupName: string;
+  /** Short "best for" line shown under the setup name. */
+  bestFor: string;
   /** Who this mess type is for, used on the SEO landing page. */
   whoFor: string;
   /** Fit considerations to check before buying, used on the SEO landing page. */
@@ -33,8 +37,8 @@ export interface Goal {
   description: string;
 }
 
-/** Role of a piece within a 3 piece reset. Drives the badge on the product card. */
-export type ProductRole = "Main fix" | "Cabinet protection" | "Grab and go";
+/** Role of a piece within the 3 piece setup. Drives the card label. */
+export type ProductRole = "Access" | "Protection" | "Control";
 
 export interface Product {
   id: string;
@@ -47,8 +51,10 @@ export interface Product {
   affiliateUrl: string;
   imageUrl?: string;
   messType: MessTypeId;
-  /** Badge label describing the piece's job in the reset. */
+  /** Role this piece plays in the setup: Access, Protection, or Control. */
   role: ProductRole;
+  /** Button label, for example "View Organizer", "View Liner", "View Caddy". */
+  viewLabel: string;
   active: boolean;
 }
 
