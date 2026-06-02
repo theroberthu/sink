@@ -140,7 +140,7 @@ export async function submitEmailCapture(payload: EmailCapturePayload): Promise<
 }
 
 export interface WaitlistPayload {
-  email?: string | null;
+  email: string;
   desiredKit: string;
   targetPrice: string;
   topPriority: string;
@@ -150,6 +150,7 @@ export interface WaitlistPayload {
 
 export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: boolean }> {
   track("waitlist_submitted", {
+    email: payload.email,
     desired_kit: payload.desiredKit,
     target_price: payload.targetPrice,
     top_priority: payload.topPriority,
@@ -165,7 +166,7 @@ export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: bo
   const supabase = getSupabaseClient();
   try {
     const { error } = await supabase!.from("waitlist").insert({
-      email: payload.email ?? null,
+      email: payload.email,
       desired_kit: payload.desiredKit,
       target_price: payload.targetPrice,
       top_priority: payload.topPriority,

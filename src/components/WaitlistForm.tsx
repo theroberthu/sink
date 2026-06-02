@@ -65,10 +65,15 @@ function ChipGroup({
   );
 }
 
-// Three question kit waitlist. Email is optional. Fires waitlist_started on first interaction.
+// Simple email shape check. Native validation also applies via type=email + required.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Three question kit waitlist. Email is required so we can contact users about a kit.
+// Fires waitlist_started on first interaction.
 export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
+  const [invalid, setInvalid] = useState(false);
   const [desiredKit, setDesiredKit] = useState(KIT_OPTIONS[0]);
   const [targetPrice, setTargetPrice] = useState(PRICE_OPTIONS[0]);
   const [topPriority, setTopPriority] = useState(PRIORITY_OPTIONS[0]);
@@ -88,9 +93,14 @@ export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!EMAIL_RE.test(email.trim())) {
+      setInvalid(true);
+      return;
+    }
+    setInvalid(false);
     setStatus("submitting");
     const { ok } = await submitWaitlist({
-      email: email || null,
+      email: email.trim(),
       desiredKit,
       targetPrice,
       topPriority,
@@ -154,17 +164,32 @@ export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
 
       <div className="mt-5">
         <label htmlFor="waitlist-email" className="type-label">
-          Email (optional)
+          Email
         </label>
         <input
           id="waitlist-email"
           type="email"
+          required
           autoComplete="email"
+          aria-invalid={invalid}
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (invalid) setInvalid(false);
+          }}
           placeholder="you@example.com"
-          className="mt-1.5 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary"
+          className={`mt-1.5 w-full rounded-xl border bg-background px-3.5 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary ${
+            invalid ? "border-destructive" : "border-border"
+          }`}
         />
+        {invalid ? (
+          <p className="mt-1.5 text-sm text-destructive" role="alert">
+            Please enter a valid email so we can send your kit update.
+          </p>
+        ) : null}
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          We will only use this to send your plan or kit update.
+        </p>
       </div>
 
       {status === "error" ? (
