@@ -5,7 +5,7 @@
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
 import { track } from "@/lib/analytics";
 import { getSessionId } from "@/lib/session";
-import type { ComponentType, GoalId, MessTypeId, ProductRole } from "@/lib/types";
+import type { ComponentType, GoalId, MessTypeId, ProductRole, ProductStatus } from "@/lib/types";
 
 function warnNotConfigured(action: string): void {
   if (process.env.NODE_ENV !== "production") {
@@ -48,12 +48,14 @@ export interface ProductClickPayload {
   componentType: ComponentType;
   productName: string;
   retailer: string;
-  affiliateUrl: string;
+  finalAffiliateUrl: string;
+  productStatus: ProductStatus;
+  priority: number;
 }
 
 /**
  * Product click handler. Fires the analytics event and persists the click.
- * Returns the affiliate url so callers can open it after tracking.
+ * Returns the final affiliate url so callers can open it after tracking.
  */
 export async function trackProductClick(payload: ProductClickPayload): Promise<string> {
   const sessionId = getSessionId();
@@ -66,12 +68,14 @@ export async function trackProductClick(payload: ProductClickPayload): Promise<s
     component_type: payload.componentType,
     product_name: payload.productName,
     retailer: payload.retailer,
-    affiliate_url: payload.affiliateUrl,
+    final_affiliate_url: payload.finalAffiliateUrl,
+    product_status: payload.productStatus,
+    priority: payload.priority,
   });
 
   if (!isSupabaseConfigured()) {
     warnNotConfigured("product_clicks");
-    return payload.affiliateUrl;
+    return payload.finalAffiliateUrl;
   }
 
   const supabase = getSupabaseClient();
@@ -83,13 +87,13 @@ export async function trackProductClick(payload: ProductClickPayload): Promise<s
       component_type: payload.componentType,
       product_name: payload.productName,
       retailer: payload.retailer,
-      affiliate_url: payload.affiliateUrl,
+      affiliate_url: payload.finalAffiliateUrl,
     });
   } catch (error) {
     console.error("[tracking] trackProductClick failed", error);
   }
 
-  return payload.affiliateUrl;
+  return payload.finalAffiliateUrl;
 }
 
 export interface EmailCapturePayload {

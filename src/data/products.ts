@@ -1,149 +1,195 @@
-import type { ComponentType, MessTypeId, Product } from "@/lib/types";
+import type { MessTypeId, Product, ProductRole } from "@/lib/types";
 
 // Placeholder product catalog. Structured to mirror the Supabase `products` table
 // so this can later be swapped for a database query without changing call sites.
 // Affiliate URLs are placeholders for now. Each mess type forms one curated 3 piece
-// setup with an Access piece, a Protection piece, and a Control piece.
+// setup with an Access piece, a Protection piece, and a Control piece. A role can
+// have more than one product; the lowest priority available one is shown.
 export const PRODUCTS: Product[] = [
   // Bottle Avalanche
   {
     id: "ba-pull-out-organizer",
+    messType: "bottle-avalanche",
+    role: "Access",
     componentType: "Pull Out Organizer",
     productName: "Glide Out Under Sink Drawer",
     reason: "Makes the back of the cabinet reachable.",
-    price: "$32",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/pull-out-organizer",
-    messType: "bottle-avalanche",
-    role: "Access",
+    asin: "B0EXAMPLE01",
+    price: "$32",
     viewLabel: "View Organizer",
-    active: true,
+    status: "active",
+    priority: 1,
+  },
+  {
+    // Demonstrates fallback: this is the top priority pick but is out of stock, so
+    // getBestProduct skips it and returns the active liner below.
+    id: "ba-cabinet-liner-oos",
+    messType: "bottle-avalanche",
+    role: "Protection",
+    componentType: "Waterproof Cabinet Liner",
+    productName: "Premium Adhesive Cabinet Liner",
+    reason: "Catches leaks, spills, and sticky bottle rings.",
+    retailer: "Amazon",
+    asin: "B0EXAMPLE99",
+    price: "$19",
+    viewLabel: "View Liner",
+    status: "out_of_stock",
+    priority: 0,
+    notes: "Primary pick, currently out of stock. Backup is the active liner.",
   },
   {
     id: "ba-cabinet-liner",
+    messType: "bottle-avalanche",
+    role: "Protection",
     componentType: "Waterproof Cabinet Liner",
     productName: "Peel and Stick Waterproof Liner",
     reason: "Catches leaks, spills, and sticky bottle rings.",
-    price: "$14",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/cabinet-liner-ba",
-    messType: "bottle-avalanche",
-    role: "Protection",
+    asin: "B0EXAMPLE02",
+    price: "$14",
     viewLabel: "View Liner",
-    active: true,
+    status: "active",
+    priority: 1,
   },
   {
     id: "ba-cleaning-caddy",
+    messType: "bottle-avalanche",
+    role: "Control",
     componentType: "Cleaning Caddy",
     productName: "Grab and Go Cleaning Caddy",
     reason: "Keeps daily-use items together.",
-    price: "$18",
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/cleaning-caddy",
-    messType: "bottle-avalanche",
-    role: "Control",
+    price: "$18",
     viewLabel: "View Caddy",
-    active: true,
+    status: "active",
+    priority: 1,
   },
 
   // Pipe Maze
   {
     id: "pm-narrow-side-organizer",
+    messType: "pipe-maze",
+    role: "Access",
     componentType: "Narrow Side Organizer",
     productName: "Slim Side Shelf for Under Sink",
     reason: "Works around pipes instead of fighting the middle.",
-    price: "$28",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/narrow-side-organizer",
-    messType: "pipe-maze",
-    role: "Access",
+    asin: "B0EXAMPLE03",
+    price: "$28",
     viewLabel: "View Organizer",
-    active: true,
+    status: "active",
+    priority: 1,
   },
   {
     id: "pm-cabinet-liner",
+    messType: "pipe-maze",
+    role: "Protection",
     componentType: "Waterproof Cabinet Liner",
     productName: "Peel and Stick Waterproof Liner",
     reason: "Protects the cabinet floor around plumbing.",
-    price: "$14",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/cabinet-liner-pm",
-    messType: "pipe-maze",
-    role: "Protection",
+    asin: "B0EXAMPLE04",
+    price: "$14",
     viewLabel: "View Liner",
-    active: true,
+    status: "active",
+    priority: 1,
   },
   {
     id: "pm-small-bins",
+    messType: "pipe-maze",
+    role: "Control",
     componentType: "Small Bins",
     productName: "Stackable Clear Bins, Set of 3",
     reason: "Groups loose supplies without blocking pipes.",
-    price: "$22",
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/small-bins",
-    messType: "pipe-maze",
-    role: "Control",
+    price: "$22",
     viewLabel: "View Bins",
-    active: true,
+    status: "active",
+    priority: 1,
   },
 
   // Tiny Cabinet Energy
   {
     id: "tc-slim-organizer",
+    messType: "tiny-cabinet-energy",
+    role: "Access",
     componentType: "Slim Organizer",
     productName: "Slim Two Tier Under Sink Rack",
     reason: "Adds order without eating the whole cabinet.",
-    price: "$26",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/slim-organizer",
-    messType: "tiny-cabinet-energy",
-    role: "Access",
+    asin: "B0EXAMPLE05",
+    price: "$26",
     viewLabel: "View Organizer",
-    active: true,
+    status: "active",
+    priority: 1,
   },
   {
     id: "tc-cabinet-liner",
+    messType: "tiny-cabinet-energy",
+    role: "Protection",
     componentType: "Waterproof Cabinet Liner",
     productName: "Peel and Stick Waterproof Liner",
     reason: "Keeps the cabinet floor easier to clean.",
-    price: "$14",
     retailer: "Amazon",
-    affiliateUrl: "https://example.com/affiliate/cabinet-liner-tc",
-    messType: "tiny-cabinet-energy",
-    role: "Protection",
+    asin: "B0EXAMPLE06",
+    price: "$14",
     viewLabel: "View Liner",
-    active: true,
+    status: "active",
+    priority: 1,
   },
   {
     id: "tc-stackable-tray",
+    messType: "tiny-cabinet-energy",
+    role: "Control",
     componentType: "Stackable Tray",
     productName: "Stackable Storage Tray",
     reason: "Uses vertical space without overcomplicating it.",
-    price: "$16",
     retailer: "Target",
     affiliateUrl: "https://example.com/affiliate/stackable-tray",
-    messType: "tiny-cabinet-energy",
-    role: "Control",
+    price: "$16",
     viewLabel: "View Tray",
-    active: true,
+    status: "active",
+    priority: 1,
   },
 ];
 
+const AMAZON_AFFILIATE_TAG = "sinkcabinetfi-20";
+
+/** The roles that make up every setup, in display order. */
+export const SETUP_ROLES: ProductRole[] = ["Access", "Protection", "Control"];
+
 /**
- * Returns the active products for a mess type, ordered to match the mess type's
- * component list. This is the single source for the 3 piece reset on the result page.
+ * Returns the best available product for a mess type and role:
+ * filter by mess type and role, drop out_of_stock and paused, sort by priority
+ * ascending, and return the first. Returns null when nothing is available.
  */
-export function getProductsForMessType(
-  messType: MessTypeId,
-  componentOrder: ComponentType[],
-): Product[] {
-  const pool = PRODUCTS.filter((product) => product.messType === messType && product.active);
-  const ordered: Product[] = [];
-  for (const component of componentOrder) {
-    const match = pool.find((product) => product.componentType === component);
-    if (match) {
-      ordered.push(match);
-    }
+export function getBestProduct(messType: MessTypeId, role: ProductRole): Product | null {
+  const available = PRODUCTS.filter(
+    (p) =>
+      p.messType === messType &&
+      p.role === role &&
+      p.status !== "out_of_stock" &&
+      p.status !== "paused",
+  ).sort((a, b) => a.priority - b.priority);
+  return available[0] ?? null;
+}
+
+/**
+ * Builds the final affiliate URL for a product. Amazon products with an ASIN get a
+ * tagged /dp/ link. Otherwise the explicit affiliateUrl is used. Empty string if
+ * neither is available, so callers can guard before opening.
+ */
+export function getFinalAffiliateUrl(product: Product): string {
+  if (product.retailer === "Amazon" && product.asin) {
+    return `https://www.amazon.com/dp/${product.asin}?tag=${AMAZON_AFFILIATE_TAG}`;
   }
-  return ordered;
+  return product.affiliateUrl ?? "";
+}
+
+/** The one product per role for a mess type, in display order. Null when unavailable. */
+export function getSetupPicks(messType: MessTypeId): { role: ProductRole; product: Product | null }[] {
+  return SETUP_ROLES.map((role) => ({ role, product: getBestProduct(messType, role) }));
 }

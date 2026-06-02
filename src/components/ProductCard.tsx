@@ -3,6 +3,7 @@
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/Badge";
 import { trackProductClick } from "@/lib/tracking";
+import { getFinalAffiliateUrl } from "@/data/products";
 import type { GoalId, MessTypeId, Product, ProductRole } from "@/lib/types";
 
 interface ProductCardProps {
@@ -25,6 +26,8 @@ const ROLE_TONE: Record<ProductRole, "primary" | "success" | "accent"> = {
 // Product recommendation card. Clicking the view button fires tracking, then opens
 // the single affiliate link. One tab only, never multiple.
 export function ProductCard({ product, step, setupName, messType, goal }: ProductCardProps) {
+  const finalAffiliateUrl = getFinalAffiliateUrl(product);
+
   async function handleClick() {
     // Fire and forget tracking. We open the link regardless so the user is never blocked.
     if (messType && goal) {
@@ -36,10 +39,14 @@ export function ProductCard({ product, step, setupName, messType, goal }: Produc
         componentType: product.componentType,
         productName: product.productName,
         retailer: product.retailer,
-        affiliateUrl: product.affiliateUrl,
+        finalAffiliateUrl,
+        productStatus: product.status,
+        priority: product.priority,
       });
     }
-    window.open(product.affiliateUrl, "_blank", "noopener,noreferrer");
+    if (finalAffiliateUrl) {
+      window.open(finalAffiliateUrl, "_blank", "noopener,noreferrer");
+    }
   }
 
   return (

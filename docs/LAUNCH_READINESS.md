@@ -34,13 +34,23 @@ Data writes go through `src/lib/tracking.ts`. Analytics events go through
 
 ## Where product data lives
 
-- Placeholder catalog: `src/data/products.ts`. Each mess type has exactly three
-  products with role (Access, Protection, Control), component type, product name,
-  reason, price, retailer, affiliate URL, optional image URL, and active flag.
+- Placeholder catalog: `src/data/products.ts`. Each mess type has one product per
+  role (Access, Protection, Control), and a role may have more than one product so
+  there is a fallback. Fields: id, messType, role, componentType, productName,
+  reason, retailer, asin (optional), affiliateUrl (optional), price, viewLabel,
+  status, priority, notes (optional).
+- `status` is one of active, backup, out_of_stock, paused. out_of_stock and paused
+  are never shown.
+- Selection logic: `getBestProduct(messType, role)` filters by mess type and role,
+  drops out_of_stock and paused, sorts by priority ascending, and returns the first,
+  or null. `getSetupPicks(messType)` returns the one pick per role in display order.
+- Affiliate links: `getFinalAffiliateUrl(product)` returns a tagged Amazon /dp/ link
+  when retailer is Amazon and an asin exists (tag `sinkcabinetfi-20`), otherwise the
+  explicit affiliateUrl. Placeholder ASINs and URLs ship today; replace before launch.
+- If a role has no available product, the UI shows a Temporarily unavailable card and
+  keeps exactly three roles visible.
 - The shape mirrors the Supabase `products` table so it can later be swapped for a
   database query without changing call sites.
-- Affiliate URLs are placeholders (`https://example.com/affiliate/...`). Replace
-  with real tagged links before launch.
 - Mess type copy and the 3 piece component order live in `src/data/messTypes.ts`.
   Goals live in `src/data/goals.ts`. FAQ lives in `src/data/faq.ts`.
 
@@ -76,7 +86,7 @@ and confirm each fires:
 | `result_viewed` | Fix page loads |
 | `goal_selected` | Changing the goal on the fix page |
 | `fit_check_viewed` | Fit check becomes visible |
-| `product_clicked` | View product button. Includes mess_type, goal, setup_name, role, component_type, product_name, retailer, affiliate_url |
+| `product_clicked` | View product button. Includes mess_type, goal, setup_name, role, component_type, product_name, retailer, final_affiliate_url, product_status, priority |
 | `email_submitted` | Send Me This Plan submit |
 | `waitlist_started` | First focus in the waitlist form |
 | `waitlist_submitted` | Join the Kit Waitlist submit. Includes email, desired_kit, target_price, top_priority, mess_type, goal |
@@ -89,7 +99,9 @@ and confirm each fires:
 - [ ] Selecting a mess goes straight to the fix page
 - [ ] Goal selector defaults to Easy Reach and updates without navigating away
 - [ ] Result shows exactly three product cards with Access, Protection, Control
-- [ ] View product opens one affiliate link in a new tab, only one tab
+- [ ] An out_of_stock or paused product is never shown; its role falls back to the
+      next priority, or shows Temporarily unavailable if none are left
+- [ ] View product opens one tagged affiliate link in a new tab, only one tab
 - [ ] Send Me This Plan requires a valid email and shows the success message
 - [ ] Join the Kit Waitlist requires a valid email and shows the success message
 - [ ] Three legal pages load: privacy, terms, affiliate disclosure
@@ -98,7 +110,9 @@ and confirm each fires:
 
 ## Known limitations
 
-- Affiliate URLs are placeholders, not real tagged links.
+- Affiliate URLs and Amazon ASINs are placeholders. The Amazon tag is wired
+  (`sinkcabinetfi-20`) but the ASINs are not real, so links will not resolve until
+  replaced.
 - No checkout, no cart, no accounts. Affiliate first validation only.
 - Supabase is optional in this build. Without it, captures are not persisted.
 - Product catalog is static in code, not yet served from Supabase.

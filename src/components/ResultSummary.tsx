@@ -13,7 +13,7 @@ import { Carousel } from "@/components/Carousel";
 import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { recordSession } from "@/lib/tracking";
-import { getProductsForMessType } from "@/data/products";
+import { getSetupPicks } from "@/data/products";
 import type { Goal, MessType, ProductRole } from "@/lib/types";
 
 interface ResultSummaryProps {
@@ -27,6 +27,24 @@ const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
   Control: LayoutGrid,
 };
 
+// Shown when no product is available for a role. Keeps exactly 3 roles visible.
+function UnavailableProductCard({ role, step }: { role: ProductRole; step: number }) {
+  return (
+    <article className="flex h-full flex-col rounded-2xl border border-dashed border-border bg-card p-6 text-card-foreground">
+      <div className="flex items-center justify-between gap-2">
+        <Badge tone="muted">{role}</Badge>
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+          {step}
+        </span>
+      </div>
+      <h3 className="mt-4 text-lg font-semibold">Temporarily unavailable</h3>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+        We are finding a better pick for this part of the setup.
+      </p>
+    </article>
+  );
+}
+
 // Fix section of the continuous tool workspace: one curated 3 piece setup. The goal
 // is chosen above this in ToolFlow. Honest that V1 uses affiliate links for products.
 export function ResultSummary({ messType, goal }: ResultSummaryProps) {
@@ -34,7 +52,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
   const productsRef = useRef<HTMLDivElement>(null);
   const waitlistRef = useRef<HTMLDivElement>(null);
 
-  const products = getProductsForMessType(messType.id, messType.components);
+  const picks = getSetupPicks(messType.id);
   const messImage = getMessImage(messType.id);
   const resultType = `${messType.id}__${goal.id}`;
 
@@ -76,26 +94,37 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
             <p className="mt-3 text-xl font-semibold text-foreground">{messType.setupName}</p>
             <p className="mt-1 text-sm text-muted-foreground">Best for: {messType.bestFor}</p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Buy the pieces separately today. Join the waitlist if you want this as one ready to go
-              kit.
+              Start with these 3 pieces. Shop them separately today or join the waitlist for a ready
+              to go kit.
             </p>
           </div>
         </div>
 
-        {/* Three component cards: Access, Protection, Control */}
+        {/* Three component cards: Access, Protection, Control. Always exactly 3 roles. */}
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          {products.map((product) => {
-            const Icon = ROLE_ICON[product.role];
+          {picks.map(({ role, product }) => {
+            const Icon = ROLE_ICON[role];
             return (
-              <div key={product.id} className="rounded-xl border border-border bg-cream p-5">
+              <div key={role} className="rounded-xl border border-border bg-cream p-5">
                 <div className="flex items-center gap-2">
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage text-primary">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
-                  <span className="text-sm font-semibold">{product.role}</span>
+                  <span className="text-sm font-semibold">{role}</span>
                 </div>
-                <p className="mt-3 font-semibold">{product.componentType}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{product.reason}</p>
+                {product ? (
+                  <>
+                    <p className="mt-3 font-semibold">{product.componentType}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{product.reason}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-3 font-semibold">Temporarily unavailable</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      We are finding a better pick for this part of the setup.
+                    </p>
+                  </>
+                )}
               </div>
             );
           })}
@@ -109,10 +138,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
       {/* Product cards section */}
       <div ref={productsRef}>
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <h3 className="type-section-title">Shop the pieces</h3>
-          <span className="type-small">No judgment. We have seen worse.</span>
-        </div>
+        <h3 className="type-section-title">Shop your 3 piece setup</h3>
 
         <p className="mt-2 flex items-start gap-2 text-xs text-muted-foreground">
           <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
@@ -120,30 +146,38 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
         </p>
 
         <div className="mt-5 hidden gap-5 md:grid md:grid-cols-3">
-          {products.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              step={index + 1}
-              setupName={messType.setupName}
-              messType={messType.id}
-              goal={goal.id}
-            />
-          ))}
-        </div>
-
-        <div className="mt-5 md:hidden">
-          <Carousel label="The 3 pieces" slideWidth="peek">
-            {products.map((product, index) => (
+          {picks.map(({ role, product }, index) =>
+            product ? (
               <ProductCard
-                key={product.id}
+                key={role}
                 product={product}
                 step={index + 1}
                 setupName={messType.setupName}
                 messType={messType.id}
                 goal={goal.id}
               />
-            ))}
+            ) : (
+              <UnavailableProductCard key={role} role={role} step={index + 1} />
+            ),
+          )}
+        </div>
+
+        <div className="mt-5 md:hidden">
+          <Carousel label="The 3 pieces" slideWidth="peek">
+            {picks.map(({ role, product }, index) =>
+              product ? (
+                <ProductCard
+                  key={role}
+                  product={product}
+                  step={index + 1}
+                  setupName={messType.setupName}
+                  messType={messType.id}
+                  goal={goal.id}
+                />
+              ) : (
+                <UnavailableProductCard key={role} role={role} step={index + 1} />
+              ),
+            )}
           </Carousel>
         </div>
 

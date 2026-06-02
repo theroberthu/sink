@@ -6,12 +6,15 @@ import { CTALink } from "@/components/CTAButton";
 import { CTASection } from "@/components/CTASection";
 import { Badge } from "@/components/Badge";
 import { MESS_ICONS } from "@/components/messIcons";
-import { getProductsForMessType } from "@/data/products";
+import { getSetupPicks } from "@/data/products";
 import type { MessType } from "@/lib/types";
 
 // Shared layout for the three mess type SEO pages. Server rendered for crawlability.
 export function MessTypeLanding({ messType }: { messType: MessType }) {
-  const products = getProductsForMessType(messType.id, messType.components);
+  // One available product per role, in order. Filters out any unavailable picks.
+  const products = getSetupPicks(messType.id)
+    .map((pick) => pick.product)
+    .filter((product): product is NonNullable<typeof product> => product !== null);
   const Icon = MESS_ICONS[messType.id];
 
   return (

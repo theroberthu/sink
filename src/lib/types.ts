@@ -44,22 +44,31 @@ export interface Goal {
 /** Role of a piece within the 3 piece setup. Drives the card label. */
 export type ProductRole = "Access" | "Protection" | "Control";
 
+/** Availability status. out_of_stock and paused products are never shown. */
+export type ProductStatus = "active" | "backup" | "out_of_stock" | "paused";
+
 export interface Product {
   id: string;
-  componentType: ComponentType;
-  productName: string;
-  reason: string;
-  /** Placeholder display price, for example "$24". */
-  price: string;
-  retailer: string;
-  affiliateUrl: string;
-  imageUrl?: string;
   messType: MessTypeId;
   /** Role this piece plays in the setup: Access, Protection, or Control. */
   role: ProductRole;
+  componentType: ComponentType;
+  productName: string;
+  reason: string;
+  retailer: string;
+  /** Amazon ASIN. When present and retailer is Amazon, the affiliate link is generated. */
+  asin?: string;
+  /** Explicit affiliate URL. Used when no ASIN based link is generated. */
+  affiliateUrl?: string;
+  /** Placeholder display price, for example "$24". */
+  price: string;
+  imageUrl?: string;
   /** Button label, for example "View Organizer", "View Liner", "View Caddy". */
   viewLabel: string;
-  active: boolean;
+  status: ProductStatus;
+  /** Lower wins. The lowest priority available product for a role is shown. */
+  priority: number;
+  notes?: string;
 }
 
 export interface FaqItem {
