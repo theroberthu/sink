@@ -25,6 +25,8 @@ export interface MessType {
   setupName: string;
   /** Short "best for" line shown under the setup name. */
   bestFor: string;
+  /** Early access kit target price for this mess type, in dollars. */
+  kitTargetPrice: number;
   /** Who this mess type is for, used on the SEO landing page. */
   whoFor: string;
   /** Fit considerations to check before buying, used on the SEO landing page. */
@@ -60,8 +62,10 @@ export interface Product {
   asin?: string;
   /** Explicit affiliate URL. Used when no ASIN based link is generated. */
   affiliateUrl?: string;
-  /** Placeholder display price, for example "$24". */
+  /** Placeholder display price, for example "$24" or "Check price". */
   price: string;
+  /** Estimated numeric price used for separate-piece total and savings math. */
+  estimatedPriceNumber: number;
   imageUrl?: string;
   /** Button label, for example "View Organizer", "View Liner", "View Caddy". */
   viewLabel: string;

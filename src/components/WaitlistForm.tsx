@@ -16,6 +16,15 @@ interface WaitlistFormProps {
   goal?: GoalId | null;
   /** When true, drops the card chrome and heading so it can sit inside another card. */
   bare?: boolean;
+  /** Submit button label. Defaults to "Join the Kit Waitlist". */
+  submitLabel?: string;
+  /** Kit savings estimate sent with waitlist_submitted, when available. */
+  savings?: {
+    separatePieceTotal: number;
+    kitTargetPrice: number;
+    estimatedSavings: number;
+    estimatedSavingsPercent: number;
+  } | null;
 }
 
 // Reusable radio group rendered as accessible selectable chips.
@@ -70,7 +79,13 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Three question kit waitlist. Email is required so we can contact users about a kit.
 // Fires waitlist_started on first interaction.
-export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
+export function WaitlistForm({
+  messType,
+  goal,
+  bare,
+  submitLabel = "Join the Kit Waitlist",
+  savings,
+}: WaitlistFormProps) {
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
   const [invalid, setInvalid] = useState(false);
@@ -106,6 +121,10 @@ export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
       topPriority,
       messType,
       goal,
+      separatePieceTotal: savings?.separatePieceTotal ?? null,
+      kitTargetPrice: savings?.kitTargetPrice ?? null,
+      estimatedSavings: savings?.estimatedSavings ?? null,
+      estimatedSavingsPercent: savings?.estimatedSavingsPercent ?? null,
     });
     setStatus(ok ? "done" : "error");
   }
@@ -205,7 +224,7 @@ export function WaitlistForm({ messType, goal, bare }: WaitlistFormProps) {
             Joining
           </>
         ) : (
-          "Join the Kit Waitlist"
+          submitLabel
         )}
       </CTAButton>
     </form>

@@ -150,6 +150,11 @@ export interface WaitlistPayload {
   topPriority: string;
   messType?: MessTypeId | null;
   goal?: GoalId | null;
+  /** Kit savings estimate, when available for the current setup. */
+  separatePieceTotal?: number | null;
+  kitTargetPrice?: number | null;
+  estimatedSavings?: number | null;
+  estimatedSavingsPercent?: number | null;
 }
 
 export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: boolean }> {
@@ -160,6 +165,10 @@ export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: bo
     top_priority: payload.topPriority,
     mess_type: payload.messType ?? null,
     goal: payload.goal ?? null,
+    separate_piece_total: payload.separatePieceTotal ?? null,
+    kit_target_price: payload.kitTargetPrice ?? null,
+    estimated_savings: payload.estimatedSavings ?? null,
+    estimated_savings_percent: payload.estimatedSavingsPercent ?? null,
   });
 
   if (!isSupabaseConfigured()) {

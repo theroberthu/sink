@@ -11,6 +11,7 @@ export const MESS_TYPES: MessType[] = [
     diagnosis:
       "You have plenty of stuff and not enough front row seating. The fix is to pull everything forward so the back row stops swallowing your bottles.",
     setupName: "Bottle Avalanche Setup",
+    kitTargetPrice: 59,
     bestFor: "Bags, bottles, and cleaning chaos.",
     whoFor:
       "For cabinets packed with sprays and soaps where the thing you need is always hiding in the back.",
@@ -30,6 +31,7 @@ export const MESS_TYPES: MessType[] = [
     diagnosis:
       "The plumbing owns the middle of your cabinet. The fix is to work around it with narrow pieces that claim the sides instead of fighting the pipes.",
     setupName: "Pipe Maze Setup",
+    kitTargetPrice: 59,
     bestFor: "Pipes, garbage disposal, and awkward dead space.",
     whoFor:
       "For cabinets where pipes or a garbage disposal sit dead center and block normal organizers.",
@@ -49,6 +51,7 @@ export const MESS_TYPES: MessType[] = [
     diagnosis:
       "You are short on floor space, so the answer is up. The fix stacks vertically and keeps the footprint slim so nothing topples.",
     setupName: "Tiny Cabinet Setup",
+    kitTargetPrice: 49,
     bestFor: "Small cabinets and stacked supplies.",
     whoFor:
       "For small cabinets where there is no floor space left and everything stacks into a tower.",

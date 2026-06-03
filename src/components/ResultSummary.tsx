@@ -56,6 +56,26 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
   const messImage = getMessImage(messType.id);
   const resultType = `${messType.id}__${goal.id}`;
 
+  // Kit savings estimate. Only valid when all 3 roles have an available product
+  // with an estimated price. Savings only shown when positive.
+  const allPriced =
+    picks.length === 3 && picks.every((p) => p.product?.estimatedPriceNumber != null);
+  const separatePieceTotal = allPriced
+    ? picks.reduce((sum, p) => sum + (p.product?.estimatedPriceNumber ?? 0), 0)
+    : null;
+  const kitTargetPrice = messType.kitTargetPrice;
+  const estimatedSavings =
+    separatePieceTotal != null ? separatePieceTotal - kitTargetPrice : null;
+  const estimatedSavingsPercent =
+    estimatedSavings != null && separatePieceTotal
+      ? estimatedSavings / separatePieceTotal
+      : null;
+  const showSavings = estimatedSavings != null && estimatedSavings > 0;
+  const savings =
+    showSavings && separatePieceTotal != null && estimatedSavings != null && estimatedSavingsPercent != null
+      ? { separatePieceTotal, kitTargetPrice, estimatedSavings, estimatedSavingsPercent }
+      : null;
+
   // Fire result_viewed once when the fix section appears for this mess type.
   useEffect(() => {
     track("result_viewed", {
@@ -210,15 +230,48 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
       <FitCheck />
 
-      {/* Kit waitlist section */}
+      {/* Kit waitlist section with transparent savings estimate */}
       <div ref={waitlistRef} className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-        <h3 className="type-section-title">Want this as one box?</h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          We are testing ready to go Sink Cabinet Fix kits so you do not have to buy the pieces
-          separately.
-        </p>
+        <h3 className="type-section-title">Want this as one kit?</h3>
+
+        {showSavings && separatePieceTotal != null ? (
+          <>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              This setup is estimated at ${separatePieceTotal} when bought separately. We are
+              testing a ready to go kit with early-access pricing around ${kitTargetPrice}.
+            </p>
+            <dl className="mt-4 grid gap-2 sm:max-w-sm">
+              <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
+                <dt className="text-muted-foreground">Estimated separate-piece total</dt>
+                <dd className="font-semibold">${separatePieceTotal}</dd>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
+                <dt className="text-muted-foreground">Early kit target</dt>
+                <dd className="font-semibold">${kitTargetPrice}</dd>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-sage px-4 py-2.5 text-sm">
+                <dt className="font-medium">Potential savings</dt>
+                <dd className="font-semibold text-primary">${estimatedSavings}</dd>
+              </div>
+            </dl>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Estimates are based on product prices we last reviewed and may change.
+            </p>
+          </>
+        ) : (
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            We are testing a ready to go kit so you do not have to buy the pieces separately.
+          </p>
+        )}
+
         <div className="mt-5">
-          <WaitlistForm messType={messType.id} goal={goal.id} bare />
+          <WaitlistForm
+            messType={messType.id}
+            goal={goal.id}
+            bare
+            submitLabel="Get Early Access"
+            savings={savings}
+          />
         </div>
       </div>
     </div>
