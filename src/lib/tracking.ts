@@ -146,33 +146,32 @@ export async function submitEmailCapture(payload: EmailCapturePayload): Promise<
 export interface WaitlistPayload {
   email: string;
   desiredKit: string;
-  /** Price sensitivity bucket: price_sensitive, target_fair, or higher_willingness. */
-  targetPrice: string;
-  /** The actual dollar amount the user selected. */
-  targetPriceValue?: number | null;
+  /** Worth-it answer: yes_want_that, maybe_depends_on_fit, or no_too_high. */
+  worthItAnswer: string;
   topPriority: string;
   messType?: MessTypeId | null;
   goal?: GoalId | null;
-  /** Kit savings estimate, when available for the current setup. */
+  /** First-batch kit economics, when available for the current setup. */
   separatePieceTotal?: number | null;
   kitTargetPrice?: number | null;
-  estimatedSavings?: number | null;
-  estimatedSavingsPercent?: number | null;
+  firstBatchCredit?: number | null;
+  potentialFirstBatchPrice?: number | null;
+  potentialSavings?: number | null;
 }
 
 export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: boolean }> {
   track("waitlist_submitted", {
     email: payload.email,
     desired_kit: payload.desiredKit,
-    target_price: payload.targetPrice,
-    target_price_value: payload.targetPriceValue ?? null,
+    worth_it_answer: payload.worthItAnswer,
     top_priority: payload.topPriority,
     mess_type: payload.messType ?? null,
     goal: payload.goal ?? null,
     separate_piece_total: payload.separatePieceTotal ?? null,
     kit_target_price: payload.kitTargetPrice ?? null,
-    estimated_savings: payload.estimatedSavings ?? null,
-    estimated_savings_percent: payload.estimatedSavingsPercent ?? null,
+    first_batch_credit: payload.firstBatchCredit ?? null,
+    potential_first_batch_price: payload.potentialFirstBatchPrice ?? null,
+    potential_savings: payload.potentialSavings ?? null,
   });
 
   if (!isSupabaseConfigured()) {
@@ -185,7 +184,7 @@ export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: bo
     const { error } = await supabase!.from("waitlist").insert({
       email: payload.email,
       desired_kit: payload.desiredKit,
-      target_price: payload.targetPrice,
+      target_price: payload.worthItAnswer,
       top_priority: payload.topPriority,
       mess_type: payload.messType ?? null,
       goal: payload.goal ?? null,

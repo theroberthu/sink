@@ -10,20 +10,12 @@ import type { GoalId, MessTypeId } from "@/lib/types";
 const KIT_OPTIONS = ["Bottle Avalanche Kit", "Pipe Maze Kit", "Tiny Cabinet Kit"];
 const PRIORITY_OPTIONS = ["Fits my cabinet", "Looks clean", "Easy to install"];
 
-// Fallback target when a mess type is not provided.
-const FALLBACK_TARGET = 49;
-
-// Price options center on the kit target: one below, the target, one above.
-function priceOptionsFor(target: number): number[] {
-  return [target - 10, target, target + 10];
-}
-
-// How the chosen price compares to the target. Stored with the submission.
-function priceBucket(value: number, target: number): string {
-  if (value < target) return "price_sensitive";
-  if (value > target) return "higher_willingness";
-  return "target_fair";
-}
+// Worth-it answers: display label and the value we store.
+const WORTH_IT_OPTIONS: { label: string; value: string }[] = [
+  { label: "Yes, I'd want that", value: "yes_want_that" },
+  { label: "Maybe, depends on fit", value: "maybe_depends_on_fit" },
+  { label: "No, too high", value: "no_too_high" },
+];
 
 interface WaitlistFormProps {
   messType?: MessTypeId | null;
@@ -32,14 +24,13 @@ interface WaitlistFormProps {
   bare?: boolean;
   /** Submit button label. Defaults to "Join the Kit Waitlist". */
   submitLabel?: string;
-  /** Kit target price for this mess type. Drives the price options and default. */
-  kitTargetPrice?: number;
-  /** Kit savings estimate sent with waitlist_submitted, when available. */
+  /** First-batch kit economics sent with waitlist_submitted, when available. */
   savings?: {
     separatePieceTotal: number;
     kitTargetPrice: number;
-    estimatedSavings: number;
-    estimatedSavingsPercent: number;
+    firstBatchCredit: number;
+    potentialFirstBatchPrice: number;
+    potentialSavings: number;
   } | null;
 }
 
@@ -100,18 +91,13 @@ export function WaitlistForm({
   goal,
   bare,
   submitLabel = "Join the Kit Waitlist",
-  kitTargetPrice,
   savings,
 }: WaitlistFormProps) {
-  const effectiveTarget = kitTargetPrice ?? FALLBACK_TARGET;
-  const priceOptions = priceOptionsFor(effectiveTarget);
-
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [desiredKit, setDesiredKit] = useState(KIT_OPTIONS[0]);
-  // Selected price defaults to the kit target.
-  const [targetPriceValue, setTargetPriceValue] = useState(effectiveTarget);
+  const [worthIt, setWorthIt] = useState(WORTH_IT_OPTIONS[0].value);
   const [topPriority, setTopPriority] = useState(PRIORITY_OPTIONS[0]);
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
 
@@ -138,16 +124,15 @@ export function WaitlistForm({
     const { ok } = await submitWaitlist({
       email: email.trim(),
       desiredKit,
-      // Stored as a sensitivity bucket relative to the kit target.
-      targetPrice: priceBucket(targetPriceValue, effectiveTarget),
-      targetPriceValue,
+      worthItAnswer: worthIt,
       topPriority,
       messType,
       goal,
       separatePieceTotal: savings?.separatePieceTotal ?? null,
       kitTargetPrice: savings?.kitTargetPrice ?? null,
-      estimatedSavings: savings?.estimatedSavings ?? null,
-      estimatedSavingsPercent: savings?.estimatedSavingsPercent ?? null,
+      firstBatchCredit: savings?.firstBatchCredit ?? null,
+      potentialFirstBatchPrice: savings?.potentialFirstBatchPrice ?? null,
+      potentialSavings: savings?.potentialSavings ?? null,
     });
     setStatus(ok ? "done" : "error");
   }
@@ -190,13 +175,13 @@ export function WaitlistForm({
         onChange={setDesiredKit}
       />
       <fieldset className="mt-5">
-        <legend className="type-label">Would this target price feel fair?</legend>
+        <legend className="type-label">Would the first-batch price feel worth it?</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
-          {priceOptions.map((amount) => {
-            const checked = targetPriceValue === amount;
+          {WORTH_IT_OPTIONS.map((option) => {
+            const checked = worthIt === option.value;
             return (
               <label
-                key={amount}
+                key={option.value}
                 className={[
                   "flex cursor-pointer items-center justify-center rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
                   checked
@@ -206,13 +191,13 @@ export function WaitlistForm({
               >
                 <input
                   type="radio"
-                  name="targetPrice"
-                  value={amount}
+                  name="worthIt"
+                  value={option.value}
                   checked={checked}
-                  onChange={() => setTargetPriceValue(amount)}
+                  onChange={() => setWorthIt(option.value)}
                   className="sr-only"
                 />
-                ${amount}
+                {option.label}
               </label>
             );
           })}

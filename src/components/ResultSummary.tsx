@@ -27,6 +27,9 @@ const ROLE_ICON: Record<ProductRole, typeof ArrowDownToLine> = {
   Control: LayoutGrid,
 };
 
+// Early waitlist members may receive this credit on the first batch.
+const FIRST_BATCH_CREDIT = 10;
+
 // Shown when no product is available for a role. Keeps exactly 3 roles visible.
 function UnavailableProductCard({ role, step }: { role: ProductRole; step: number }) {
   return (
@@ -56,24 +59,29 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
   const messImage = getMessImage(messType.id);
   const resultType = `${messType.id}__${goal.id}`;
 
-  // Kit savings estimate. Only valid when all 3 roles have an available product
-  // with an estimated price. Savings only shown when positive.
+  // First-batch kit economics. Only valid when all 3 roles have an available
+  // product with an estimated price. Shown only when the separate-piece total is
+  // above the kit target.
   const allPriced =
     picks.length === 3 && picks.every((p) => p.product?.estimatedPriceNumber != null);
   const separatePieceTotal = allPriced
     ? picks.reduce((sum, p) => sum + (p.product?.estimatedPriceNumber ?? 0), 0)
     : null;
   const kitTargetPrice = messType.kitTargetPrice;
-  const estimatedSavings =
-    separatePieceTotal != null ? separatePieceTotal - kitTargetPrice : null;
-  const estimatedSavingsPercent =
-    estimatedSavings != null && separatePieceTotal
-      ? estimatedSavings / separatePieceTotal
-      : null;
-  const showSavings = estimatedSavings != null && estimatedSavings > 0;
+  const firstBatchCredit = FIRST_BATCH_CREDIT;
+  const potentialFirstBatchPrice = kitTargetPrice - firstBatchCredit;
+  const potentialSavings =
+    separatePieceTotal != null ? separatePieceTotal - potentialFirstBatchPrice : null;
+  const showSavings = separatePieceTotal != null && separatePieceTotal > kitTargetPrice;
   const savings =
-    showSavings && separatePieceTotal != null && estimatedSavings != null && estimatedSavingsPercent != null
-      ? { separatePieceTotal, kitTargetPrice, estimatedSavings, estimatedSavingsPercent }
+    showSavings && separatePieceTotal != null && potentialSavings != null
+      ? {
+          separatePieceTotal,
+          kitTargetPrice,
+          firstBatchCredit,
+          potentialFirstBatchPrice,
+          potentialSavings,
+        }
       : null;
 
   // Fire result_viewed once when the fix section appears for this mess type.
@@ -230,15 +238,16 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
 
       <FitCheck />
 
-      {/* Kit waitlist section with transparent savings estimate */}
+      {/* Kit waitlist section with the first-batch credit model */}
       <div ref={waitlistRef} className="rounded-2xl border border-border bg-card p-6 sm:p-8">
         <h3 className="type-section-title">Want this as one kit?</h3>
 
-        {showSavings && separatePieceTotal != null ? (
+        {showSavings && separatePieceTotal != null && potentialSavings != null ? (
           <>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               This setup is estimated at ${separatePieceTotal} when bought separately. We are
-              testing a ready to go kit with early-access pricing around ${kitTargetPrice}.
+              testing a ready to go kit around ${kitTargetPrice}, and early waitlist members may
+              receive a ${firstBatchCredit} first-batch credit if we launch.
             </p>
             <dl className="mt-4 grid gap-2 sm:max-w-sm">
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
@@ -249,9 +258,17 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
                 <dt className="text-muted-foreground">Early kit target</dt>
                 <dd className="font-semibold">${kitTargetPrice}</dd>
               </div>
+              <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
+                <dt className="text-muted-foreground">First-batch credit</dt>
+                <dd className="font-semibold">${firstBatchCredit}</dd>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
+                <dt className="text-muted-foreground">Potential first-batch price</dt>
+                <dd className="font-semibold">${potentialFirstBatchPrice}</dd>
+              </div>
               <div className="flex items-center justify-between rounded-lg bg-sage px-4 py-2.5 text-sm">
                 <dt className="font-medium">Potential savings</dt>
-                <dd className="font-semibold text-primary">${estimatedSavings}</dd>
+                <dd className="font-semibold text-primary">${potentialSavings}</dd>
               </div>
             </dl>
             <p className="mt-3 text-xs text-muted-foreground">
@@ -270,7 +287,6 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
             goal={goal.id}
             bare
             submitLabel="Get Early Access"
-            kitTargetPrice={kitTargetPrice}
             savings={savings}
           />
         </div>
