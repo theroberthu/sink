@@ -8,8 +8,22 @@ import { submitWaitlist } from "@/lib/tracking";
 import type { GoalId, MessTypeId } from "@/lib/types";
 
 const KIT_OPTIONS = ["Bottle Avalanche Kit", "Pipe Maze Kit", "Tiny Cabinet Kit"];
-const PRICE_OPTIONS = ["$39", "$49", "$69"];
 const PRIORITY_OPTIONS = ["Fits my cabinet", "Looks clean", "Easy to install"];
+
+// Fallback target when a mess type is not provided.
+const FALLBACK_TARGET = 49;
+
+// Price options center on the kit target: one below, the target, one above.
+function priceOptionsFor(target: number): number[] {
+  return [target - 10, target, target + 10];
+}
+
+// How the chosen price compares to the target. Stored with the submission.
+function priceBucket(value: number, target: number): string {
+  if (value < target) return "price_sensitive";
+  if (value > target) return "higher_willingness";
+  return "target_fair";
+}
 
 interface WaitlistFormProps {
   messType?: MessTypeId | null;
@@ -18,6 +32,8 @@ interface WaitlistFormProps {
   bare?: boolean;
   /** Submit button label. Defaults to "Join the Kit Waitlist". */
   submitLabel?: string;
+  /** Kit target price for this mess type. Drives the price options and default. */
+  kitTargetPrice?: number;
   /** Kit savings estimate sent with waitlist_submitted, when available. */
   savings?: {
     separatePieceTotal: number;
@@ -84,13 +100,18 @@ export function WaitlistForm({
   goal,
   bare,
   submitLabel = "Join the Kit Waitlist",
+  kitTargetPrice,
   savings,
 }: WaitlistFormProps) {
+  const effectiveTarget = kitTargetPrice ?? FALLBACK_TARGET;
+  const priceOptions = priceOptionsFor(effectiveTarget);
+
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [desiredKit, setDesiredKit] = useState(KIT_OPTIONS[0]);
-  const [targetPrice, setTargetPrice] = useState(PRICE_OPTIONS[0]);
+  // Selected price defaults to the kit target.
+  const [targetPriceValue, setTargetPriceValue] = useState(effectiveTarget);
   const [topPriority, setTopPriority] = useState(PRIORITY_OPTIONS[0]);
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
 
@@ -117,7 +138,9 @@ export function WaitlistForm({
     const { ok } = await submitWaitlist({
       email: email.trim(),
       desiredKit,
-      targetPrice,
+      // Stored as a sensitivity bucket relative to the kit target.
+      targetPrice: priceBucket(targetPriceValue, effectiveTarget),
+      targetPriceValue,
       topPriority,
       messType,
       goal,
@@ -166,13 +189,35 @@ export function WaitlistForm({
         value={desiredKit}
         onChange={setDesiredKit}
       />
-      <ChipGroup
-        legend="What would you pay for a complete kit?"
-        name="targetPrice"
-        options={PRICE_OPTIONS}
-        value={targetPrice}
-        onChange={setTargetPrice}
-      />
+      <fieldset className="mt-5">
+        <legend className="type-label">Would this target price feel fair?</legend>
+        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+          {priceOptions.map((amount) => {
+            const checked = targetPriceValue === amount;
+            return (
+              <label
+                key={amount}
+                className={[
+                  "flex cursor-pointer items-center justify-center rounded-xl border px-3 py-2.5 text-center text-sm font-medium transition-colors",
+                  checked
+                    ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/30"
+                    : "border-border bg-background hover:border-primary/40",
+                ].join(" ")}
+              >
+                <input
+                  type="radio"
+                  name="targetPrice"
+                  value={amount}
+                  checked={checked}
+                  onChange={() => setTargetPriceValue(amount)}
+                  className="sr-only"
+                />
+                ${amount}
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
       <ChipGroup
         legend="What matters most?"
         name="topPriority"

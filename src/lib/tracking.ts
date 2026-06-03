@@ -146,7 +146,10 @@ export async function submitEmailCapture(payload: EmailCapturePayload): Promise<
 export interface WaitlistPayload {
   email: string;
   desiredKit: string;
+  /** Price sensitivity bucket: price_sensitive, target_fair, or higher_willingness. */
   targetPrice: string;
+  /** The actual dollar amount the user selected. */
+  targetPriceValue?: number | null;
   topPriority: string;
   messType?: MessTypeId | null;
   goal?: GoalId | null;
@@ -162,6 +165,7 @@ export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: bo
     email: payload.email,
     desired_kit: payload.desiredKit,
     target_price: payload.targetPrice,
+    target_price_value: payload.targetPriceValue ?? null,
     top_priority: payload.topPriority,
     mess_type: payload.messType ?? null,
     goal: payload.goal ?? null,

@@ -270,6 +270,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
             goal={goal.id}
             bare
             submitLabel="Get Early Access"
+            kitTargetPrice={kitTargetPrice}
             savings={savings}
           />
         </div>
