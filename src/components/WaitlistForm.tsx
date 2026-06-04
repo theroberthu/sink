@@ -24,6 +24,8 @@ interface WaitlistFormProps {
   bare?: boolean;
   /** Submit button label. Defaults to "Join the Kit Waitlist". */
   submitLabel?: string;
+  /** First-batch price inserted into the worth-it question, when available. */
+  firstBatchPrice?: number | null;
   /** First-batch kit economics sent with waitlist_submitted, when available. */
   savings?: {
     separatePieceTotal: number;
@@ -91,8 +93,13 @@ export function WaitlistForm({
   goal,
   bare,
   submitLabel = "Join the Kit Waitlist",
+  firstBatchPrice,
   savings,
 }: WaitlistFormProps) {
+  const worthItLegend =
+    firstBatchPrice != null
+      ? `Would $${firstBatchPrice} feel worth it?`
+      : "Would the first-batch price feel worth it?";
   const [started, setStarted] = useState(false);
   const [email, setEmail] = useState("");
   const [invalid, setInvalid] = useState(false);
@@ -175,7 +182,7 @@ export function WaitlistForm({
         onChange={setDesiredKit}
       />
       <fieldset className="mt-5">
-        <legend className="type-label">Would the first-batch price feel worth it?</legend>
+        <legend className="type-label">{worthItLegend}</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           {WORTH_IT_OPTIONS.map((option) => {
             const checked = worthIt === option.value;

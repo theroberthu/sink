@@ -245,25 +245,24 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
         {showSavings && separatePieceTotal != null && potentialSavings != null ? (
           <>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              This setup is estimated at ${separatePieceTotal} when bought separately. We are
-              testing a ready to go kit around ${kitTargetPrice}, and early waitlist members may
-              receive a ${firstBatchCredit} first-batch credit if we launch.
+              This setup is about ${separatePieceTotal} when bought separately. Join the waitlist and
+              get first-batch pricing around ${potentialFirstBatchPrice} if we launch this kit.
             </p>
             <dl className="mt-4 grid gap-2 sm:max-w-sm">
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
-                <dt className="text-muted-foreground">Estimated separate-piece total</dt>
+                <dt className="text-muted-foreground">Separate-piece estimate</dt>
                 <dd className="font-semibold">${separatePieceTotal}</dd>
               </div>
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
-                <dt className="text-muted-foreground">Early kit target</dt>
+                <dt className="text-muted-foreground">Kit target</dt>
                 <dd className="font-semibold">${kitTargetPrice}</dd>
               </div>
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
-                <dt className="text-muted-foreground">First-batch credit</dt>
+                <dt className="text-muted-foreground">Waitlist credit</dt>
                 <dd className="font-semibold">${firstBatchCredit}</dd>
               </div>
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
-                <dt className="text-muted-foreground">Potential first-batch price</dt>
+                <dt className="text-muted-foreground">First-batch price</dt>
                 <dd className="font-semibold">${potentialFirstBatchPrice}</dd>
               </div>
               <div className="flex items-center justify-between rounded-lg bg-sage px-4 py-2.5 text-sm">
@@ -272,7 +271,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
               </div>
             </dl>
             <p className="mt-3 text-xs text-muted-foreground">
-              Estimates are based on product prices we last reviewed and may change.
+              Prices are estimates based on our last product review and may change.
             </p>
           </>
         ) : (
@@ -287,6 +286,7 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
             goal={goal.id}
             bare
             submitLabel="Get Early Access"
+            firstBatchPrice={showSavings ? potentialFirstBatchPrice : null}
             savings={savings}
           />
         </div>
