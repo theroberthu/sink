@@ -254,10 +254,6 @@ export function ResultSummary({ messType, goal }: ResultSummaryProps) {
                 <dd className="font-semibold">${separatePieceTotal}</dd>
               </div>
               <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
-                <dt className="text-muted-foreground">Kit target</dt>
-                <dd className="font-semibold">${kitTargetPrice}</dd>
-              </div>
-              <div className="flex items-center justify-between rounded-lg bg-cream px-4 py-2.5 text-sm">
                 <dt className="text-muted-foreground">Waitlist credit</dt>
                 <dd className="font-semibold">${firstBatchCredit}</dd>
               </div>
