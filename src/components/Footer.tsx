@@ -1,29 +1,59 @@
 import Link from "next/link";
+import { Droplets } from "lucide-react";
+import { DisclosureNote } from "@/components/DisclosureNote";
 import { SITE } from "@/lib/site";
 
-const AFFILIATE_NOTE =
-  "Some product links may earn us a commission at no extra cost to you. We recommend products based on fit, usefulness, and availability.";
+const LINKS = [
+  { href: "/kitchen-sink-reset", label: "Kitchen Sink Reset" },
+  { href: "/under-sink-organizer-measurement-guide", label: "Measurement Guide" },
+  { href: "/tool", label: "Find My Fix" },
+];
 
-// Footer with the affiliate disclosure note and legal links.
+const LEGAL = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Use" },
+  { href: "/affiliate-disclosure", label: "Affiliate Disclosure" },
+];
+
+// Footer with the affiliate disclosure note and navigation.
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-slate-200 bg-slate-50">
-      <div className="mx-auto w-full max-w-5xl px-4 py-10">
-        <p className="mb-6 max-w-2xl text-sm text-slate-600">{AFFILIATE_NOTE}</p>
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-          <Link href="/privacy" className="hover:text-blue-700">
-            Privacy Policy
-          </Link>
-          <Link href="/terms" className="hover:text-blue-700">
-            Terms of Use
-          </Link>
-          <Link href="/affiliate-disclosure" className="hover:text-blue-700">
-            Affiliate Disclosure
-          </Link>
-        </nav>
-        <p className="mt-6 text-xs text-slate-500">
-          {String.fromCharCode(169)} {new Date().getFullYear()} {SITE.name}. {SITE.tagline}
-        </p>
+    <footer className="mt-8 border-t border-border bg-muted">
+      <div className="mx-auto w-full max-w-5xl px-4 py-12">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-2 font-bold">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Droplets className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span>{SITE.name}</span>
+            </div>
+            <p className="mt-3 max-w-sm text-sm text-muted-foreground">{SITE.tagline}</p>
+          </div>
+          <nav aria-label="Site" className="flex flex-col gap-2 text-sm">
+            <p className="type-caption">Explore</p>
+            {LINKS.map((item) => (
+              <Link key={item.href} href={item.href} className="text-muted-foreground hover:text-foreground">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <nav aria-label="Legal" className="flex flex-col gap-2 text-sm">
+            <p className="type-caption">Legal</p>
+            {LEGAL.map((item) => (
+              <Link key={item.href} href={item.href} className="text-muted-foreground hover:text-foreground">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-10 border-t border-border pt-6">
+          <DisclosureNote className="max-w-2xl" />
+          <p className="mt-4 text-xs text-muted-foreground">
+            {String.fromCharCode(169)} {new Date().getFullYear()} {SITE.name}.
+          </p>
+        </div>
       </div>
     </footer>
   );

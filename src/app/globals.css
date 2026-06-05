@@ -2,24 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal base only. A dedicated design system will replace these later. */
+/*
+  Sink Cabinet Fix design tokens.
+  Modern home utility brand: warm off white base, deep forest green primary,
+  warm amber accent. Clean editorial ecommerce feel, restrained and premium.
+  Colors are stored as space separated RGB channels so Tailwind can apply opacity.
+*/
 :root {
-  --max-width: 72rem;
+  --background: 246 240 230; /* #F6F0E6 warm matte cream */
+  --foreground: 31 31 27; /* #1F1F1B near black */
+
+  --card: 255 253 248; /* #FFFDF8 surface */
+  --card-foreground: 31 31 27;
+
+  --cream: 250 247 239; /* #FAF7EF */
+
+  --primary: 63 95 74; /* #3F5F4A sage forest green */
+  --primary-hover: 48 75 57; /* #304B39 */
+  --primary-foreground: 250 247 239; /* cream text on primary */
+
+  --secondary: 242 222 213; /* #F2DED5 soft clay */
+  --secondary-foreground: 31 31 27;
+
+  --accent: 184 111 82; /* #B86F52 clay */
+  --accent-foreground: 56 30 18; /* deep clay brown for contrast on soft clay */
+
+  --muted: 232 220 200; /* #E8DCC8 warm sand */
+  --muted-foreground: 107 102 93; /* #6B665D */
+
+  --border: 221 209 190; /* #DDD1BE warm border */
+
+  --success: 79 122 90; /* #4F7A5A */
+  --success-foreground: 250 247 239;
+  --sage: 216 226 211; /* #D8E2D3 soft sage */
+
+  --warning: 169 105 59; /* #A9693B */
+  --warning-foreground: 250 247 239;
+
+  --destructive: 168 62 52;
+  --destructive-foreground: 250 247 239;
+
+  --ring: 63 95 74;
+
+  /* Cabinet frame wood tones, used for the hero cabinet treatment. */
+  --wood: 161 110 64;
+  --wood-dark: 122 79 43;
+  --wood-light: 199 154 106;
 }
 
-html {
-  scroll-behavior: smooth;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* Visible focus ring for keyboard users across interactive elements. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
 }
 
-body {
-  @apply bg-white text-slate-900 antialiased;
-}
-
-/* Visible focus ring for keyboard users across interactive elements. */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  @apply outline outline-2 outline-offset-2 outline-blue-600;
+/* Consistent, reusable type styles. Sharp, confident hierarchy. */
+@layer components {
+  .type-display {
+    @apply text-[2.75rem] font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl;
+  }
+  .type-page-title {
+    @apply text-3xl font-bold leading-tight tracking-tight sm:text-4xl;
+  }
+  .type-section-title {
+    @apply text-2xl font-bold tracking-tight sm:text-3xl;
+  }
+  .type-card-title {
+    @apply text-lg font-semibold sm:text-xl;
+  }
+  .type-body {
+    @apply text-base leading-relaxed text-muted-foreground;
+  }
+  .type-small {
+    @apply text-sm text-muted-foreground;
+  }
+  .type-label {
+    @apply text-sm font-medium text-foreground;
+  }
+  .type-caption {
+    @apply text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground;
+  }
 }

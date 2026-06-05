@@ -5,7 +5,7 @@
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
 import { track } from "@/lib/analytics";
 import { getSessionId } from "@/lib/session";
-import type { ComponentType, GoalId, MessTypeId } from "@/lib/types";
+import type { ComponentType, GoalId, MessTypeId, ProductRole, ProductStatus } from "@/lib/types";
 
 function warnNotConfigured(action: string): void {
   if (process.env.NODE_ENV !== "production") {
@@ -43,15 +43,19 @@ export async function recordSession(record: Omit<SessionRecord, "sessionId">): P
 export interface ProductClickPayload {
   messType: MessTypeId;
   goal: GoalId;
+  setupName: string;
+  role: ProductRole;
   componentType: ComponentType;
   productName: string;
   retailer: string;
-  affiliateUrl: string;
+  finalAffiliateUrl: string;
+  productStatus: ProductStatus;
+  priority: number;
 }
 
 /**
  * Product click handler. Fires the analytics event and persists the click.
- * Returns the affiliate url so callers can open it after tracking.
+ * Returns the final affiliate url so callers can open it after tracking.
  */
 export async function trackProductClick(payload: ProductClickPayload): Promise<string> {
   const sessionId = getSessionId();
@@ -59,14 +63,19 @@ export async function trackProductClick(payload: ProductClickPayload): Promise<s
   track("product_clicked", {
     mess_type: payload.messType,
     goal: payload.goal,
+    setup_name: payload.setupName,
+    role: payload.role,
     component_type: payload.componentType,
     product_name: payload.productName,
     retailer: payload.retailer,
+    final_affiliate_url: payload.finalAffiliateUrl,
+    product_status: payload.productStatus,
+    priority: payload.priority,
   });
 
   if (!isSupabaseConfigured()) {
     warnNotConfigured("product_clicks");
-    return payload.affiliateUrl;
+    return payload.finalAffiliateUrl;
   }
 
   const supabase = getSupabaseClient();
@@ -78,13 +87,13 @@ export async function trackProductClick(payload: ProductClickPayload): Promise<s
       component_type: payload.componentType,
       product_name: payload.productName,
       retailer: payload.retailer,
-      affiliate_url: payload.affiliateUrl,
+      affiliate_url: payload.finalAffiliateUrl,
     });
   } catch (error) {
     console.error("[tracking] trackProductClick failed", error);
   }
 
-  return payload.affiliateUrl;
+  return payload.finalAffiliateUrl;
 }
 
 export interface EmailCapturePayload {
@@ -135,21 +144,34 @@ export async function submitEmailCapture(payload: EmailCapturePayload): Promise<
 }
 
 export interface WaitlistPayload {
-  email?: string | null;
+  email: string;
   desiredKit: string;
-  targetPrice: string;
+  /** Worth-it answer: yes_want_that, maybe_depends_on_fit, or no_too_high. */
+  worthItAnswer: string;
   topPriority: string;
   messType?: MessTypeId | null;
   goal?: GoalId | null;
+  /** First-batch kit economics, when available for the current setup. */
+  separatePieceTotal?: number | null;
+  kitTargetPrice?: number | null;
+  firstBatchCredit?: number | null;
+  potentialFirstBatchPrice?: number | null;
+  potentialSavings?: number | null;
 }
 
 export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: boolean }> {
   track("waitlist_submitted", {
+    email: payload.email,
     desired_kit: payload.desiredKit,
-    target_price: payload.targetPrice,
+    worth_it_answer: payload.worthItAnswer,
     top_priority: payload.topPriority,
     mess_type: payload.messType ?? null,
     goal: payload.goal ?? null,
+    separate_piece_total: payload.separatePieceTotal ?? null,
+    kit_target_price: payload.kitTargetPrice ?? null,
+    first_batch_credit: payload.firstBatchCredit ?? null,
+    potential_first_batch_price: payload.potentialFirstBatchPrice ?? null,
+    potential_savings: payload.potentialSavings ?? null,
   });
 
   if (!isSupabaseConfigured()) {
@@ -160,9 +182,9 @@ export async function submitWaitlist(payload: WaitlistPayload): Promise<{ ok: bo
   const supabase = getSupabaseClient();
   try {
     const { error } = await supabase!.from("waitlist").insert({
-      email: payload.email ?? null,
+      email: payload.email,
       desired_kit: payload.desiredKit,
-      target_price: payload.targetPrice,
+      target_price: payload.worthItAnswer,
       top_priority: payload.topPriority,
       mess_type: payload.messType ?? null,
       goal: payload.goal ?? null,

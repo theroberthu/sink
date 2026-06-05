@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <Section title="Privacy Policy" className="pt-12">
-      <div className="max-w-2xl space-y-4 text-slate-700">
+      <div className="max-w-2xl space-y-4 text-muted-foreground leading-relaxed">
         <p>
           This is a placeholder privacy policy for Sink Cabinet Fix. We will replace it with full
           legal copy before launch.

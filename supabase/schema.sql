@@ -39,10 +39,15 @@ create table if not exists public.email_captures (
   created_at timestamptz not null default now()
 );
 
--- 4. waitlist: kit waitlist submissions. Email is optional.
+-- 4. waitlist: kit waitlist submissions. Email is required so we can contact
+-- users who want a kit. The frontend enforces a valid email before submitting.
+-- MIGRATION NOTE: for a fresh database this ships as `not null`. If you have an
+-- existing waitlist table with null emails, backfill or remove those rows before
+-- running `alter table public.waitlist alter column email set not null;` so the
+-- change does not fail. Until then the frontend requirement is the safeguard.
 create table if not exists public.waitlist (
   id uuid primary key default gen_random_uuid(),
-  email text,
+  email text not null,
   desired_kit text not null,
   target_price text not null,
   top_priority text not null,

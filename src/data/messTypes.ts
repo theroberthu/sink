@@ -7,8 +7,19 @@ export const MESS_TYPES: MessType[] = [
     name: "Bottle Avalanche",
     shortDescription:
       "Sprays, soaps, trash bags, dishwasher pods, and one mystery bottle from 2019.",
+    tagline: "Bags, bottles, and chaos.",
     diagnosis:
       "You have plenty of stuff and not enough front row seating. The fix is to pull everything forward so the back row stops swallowing your bottles.",
+    setupName: "Bottle Avalanche Setup",
+    kitTargetPrice: 59,
+    bestFor: "Bags, bottles, and cleaning chaos.",
+    whoFor:
+      "For cabinets packed with sprays and soaps where the thing you need is always hiding in the back.",
+    fitConsiderations: [
+      "Measure cabinet depth so a pull out tray clears the door.",
+      "Leave room for the drain pipe at the back.",
+      "Check the door swing so a front caddy still fits.",
+    ],
     components: ["Pull Out Organizer", "Waterproof Cabinet Liner", "Cleaning Caddy"],
   },
   {
@@ -16,8 +27,19 @@ export const MESS_TYPES: MessType[] = [
     name: "Pipe Maze",
     shortDescription:
       "Pipes, garbage disposal, and awkward dead space that make normal organizers annoying.",
+    tagline: "Pipes in the way.",
     diagnosis:
       "The plumbing owns the middle of your cabinet. The fix is to work around it with narrow pieces that claim the sides instead of fighting the pipes.",
+    setupName: "Pipe Maze Setup",
+    kitTargetPrice: 59,
+    bestFor: "Pipes, garbage disposal, and awkward dead space.",
+    whoFor:
+      "For cabinets where pipes or a garbage disposal sit dead center and block normal organizers.",
+    fitConsiderations: [
+      "Measure the open space on each side of the pipes.",
+      "Note how far the garbage disposal sticks out.",
+      "Pick narrow pieces that do not need the middle.",
+    ],
     components: ["Narrow Side Organizer", "Waterproof Cabinet Liner", "Small Bins"],
   },
   {
@@ -25,9 +47,20 @@ export const MESS_TYPES: MessType[] = [
     name: "Tiny Cabinet Energy",
     shortDescription:
       "Small cabinet, limited room, and everything stacked like a bad game of Jenga.",
+    tagline: "No room to breathe.",
     diagnosis:
       "You are short on floor space, so the answer is up. The fix stacks vertically and keeps the footprint slim so nothing topples.",
-    components: ["Slim Organizer", "Stackable Tray", "Waterproof Cabinet Liner"],
+    setupName: "Tiny Cabinet Setup",
+    kitTargetPrice: 49,
+    bestFor: "Small cabinets and stacked supplies.",
+    whoFor:
+      "For small cabinets where there is no floor space left and everything stacks into a tower.",
+    fitConsiderations: [
+      "Measure the cabinet height for a second level.",
+      "Keep the footprint slim so the door still closes.",
+      "Check that stacked trays clear the pipes.",
+    ],
+    components: ["Slim Organizer", "Waterproof Cabinet Liner", "Stackable Tray"],
   },
 ];
 

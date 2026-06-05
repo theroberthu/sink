@@ -4,100 +4,127 @@ import { useState } from "react";
 import { MessTypeCard } from "@/components/MessTypeCard";
 import { GoalCard } from "@/components/GoalCard";
 import { ResultSummary } from "@/components/ResultSummary";
-import { CTAButton } from "@/components/CTAButton";
+import { ProgressIndicator } from "@/components/ProgressIndicator";
+import { StepSummaryRow } from "@/components/StepSummaryRow";
+import { AssetImage } from "@/components/AssetImage";
+import { getMessImage } from "@/lib/images";
 import { track } from "@/lib/analytics";
 import { MESS_TYPES, getMessType } from "@/data/messTypes";
 import { GOALS, getGoal } from "@/data/goals";
 import type { GoalId, MessTypeId } from "@/lib/types";
 
-type Step = 1 | 2 | 3;
+const STEP_LABELS = ["Mess", "Goal", "Fix"];
 
-// Three step guided flow: mess type, goal, result. Kept short so it feels like a
-// shortcut, not a quiz. Each step offers exactly 3 choices.
+// Single page 3 step guided flow. Step 1 shows first; Step 2 appears below once a
+// mess is chosen; Step 3 appears below once a goal is chosen. Completed steps
+// collapse into compact summary rows with a Change button that reopens them in place.
 export function ToolFlow() {
-  const [step, setStep] = useState<Step>(1);
   const [messTypeId, setMessTypeId] = useState<MessTypeId | null>(null);
   const [goalId, setGoalId] = useState<GoalId | null>(null);
 
   function handleMessSelect(id: MessTypeId) {
     setMessTypeId(id);
     track("mess_type_selected", { mess_type: id });
-    setStep(2);
   }
 
   function handleGoalSelect(id: GoalId) {
     setGoalId(id);
     track("goal_selected", { goal: id, mess_type: messTypeId });
-    setStep(3);
+  }
+
+  function changeMess() {
+    // Reopen step 1. Goal stays chosen so the user can keep it if they reselect.
+    setMessTypeId(null);
+  }
+
+  function changeGoal() {
+    setGoalId(null);
   }
 
   const messType = messTypeId ? getMessType(messTypeId) : undefined;
   const goal = goalId ? getGoal(goalId) : undefined;
 
-  return (
-    <div>
-      <ol className="mb-8 flex gap-2 text-sm font-medium" aria-label="Progress">
-        {[1, 2, 3].map((n) => (
-          <li
-            key={n}
-            aria-current={step === n ? "step" : undefined}
-            className={`flex-1 rounded-full px-3 py-1 text-center ${
-              step >= n ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500"
-            }`}
-          >
-            Step {n}
-          </li>
-        ))}
-      </ol>
+  // Continuous progress on one page: current step is the first not yet completed.
+  const currentStep = !messType ? 1 : !goal ? 2 : 3;
 
-      {step === 1 ? (
+  return (
+    <div className="space-y-6">
+      <div className="mb-4">
+        <ProgressIndicator current={currentStep} steps={STEP_LABELS} />
+      </div>
+
+      {/* Step 1: pick mess. Expanded until chosen, then a compact summary row. */}
+      {!messType ? (
         <section aria-labelledby="step1-heading">
-          <h1 id="step1-heading" className="text-2xl font-bold">
-            Which mess looks most like yours?
+          <p className="type-caption text-primary">Step 1 of 3</p>
+          <h1 id="step1-heading" className="type-page-title mt-1">
+            Pick your mess.
           </h1>
-          <p className="mt-2 text-slate-600">Pick the one closest to your cabinet.</p>
-          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+          <p className="type-body mt-2">Closest match is good enough.</p>
+          {/* One responsive card set: stacks on mobile, three up on desktop. */}
+          <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
             {MESS_TYPES.map((mess) => (
               <MessTypeCard
                 key={mess.id}
                 messType={mess}
                 onSelect={handleMessSelect}
                 selected={messTypeId === mess.id}
+                compact
+              />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <StepSummaryRow
+          label="Your mess"
+          title={messType.name}
+          detail={messType.tagline}
+          leading={
+            <AssetImage
+              asset={getMessImage(messType.id)}
+              className="aspect-square w-14 shrink-0 rounded-lg"
+              sizes="3.5rem"
+            />
+          }
+          onChange={changeMess}
+        />
+      )}
+
+      {/* Step 2: pick goal. Appears after a mess is chosen. Collapses once chosen. */}
+      {messType && !goal ? (
+        <section aria-labelledby="step2-heading">
+          <p className="type-caption text-primary">Step 2 of 3</p>
+          <h2 id="step2-heading" className="type-page-title mt-1">
+            Pick your goal.
+          </h2>
+          <p className="type-body mt-2">What matters most right now?</p>
+          <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {GOALS.map((g) => (
+              <GoalCard
+                key={g.id}
+                goal={g}
+                onSelect={handleGoalSelect}
+                selected={goalId === g.id}
+                compact
               />
             ))}
           </div>
         </section>
       ) : null}
 
-      {step === 2 ? (
-        <section aria-labelledby="step2-heading">
-          <h1 id="step2-heading" className="text-2xl font-bold">
-            What would make it better?
-          </h1>
-          <p className="mt-2 text-slate-600">Pick the goal that matters most right now.</p>
-          <div className="mt-6 grid gap-6 sm:grid-cols-3">
-            {GOALS.map((g) => (
-              <GoalCard key={g.id} goal={g} onSelect={handleGoalSelect} selected={goalId === g.id} />
-            ))}
-          </div>
-          <div className="mt-6">
-            <CTAButton variant="secondary" onClick={() => setStep(1)}>
-              Back
-            </CTAButton>
-          </div>
-        </section>
+      {messType && goal ? (
+        <StepSummaryRow label="Your goal" title={goal.name} detail={goal.tagline} onChange={changeGoal} />
       ) : null}
 
-      {step === 3 && messType && goal ? (
+      {/* Step 3: the fix. Appears after a goal is chosen. */}
+      {messType && goal ? (
         <section aria-labelledby="step3-heading">
-          <h1 id="step3-heading" className="sr-only">
-            Your reset plan
-          </h1>
-          <ResultSummary messType={messType} goal={goal} />
-          <div className="mt-8">
-            <CTAButton variant="secondary" onClick={() => setStep(2)}>
-              Change my goal
-            </CTAButton>
+          <p className="type-caption text-primary">Step 3 of 3</p>
+          <h2 id="step3-heading" className="type-page-title mt-1">
+            Your 3 Piece Fix
+          </h2>
+          <div className="mt-6">
+            <ResultSummary messType={messType} goal={goal} />
           </div>
         </section>
       ) : null}

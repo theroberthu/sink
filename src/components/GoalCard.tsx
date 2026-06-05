@@ -1,24 +1,44 @@
+import { Hand, Maximize2, Sparkles, type LucideIcon } from "lucide-react";
 import { Card } from "@/components/Card";
-import type { Goal } from "@/lib/types";
+import type { Goal, GoalId } from "@/lib/types";
 
 interface GoalCardProps {
   goal: Goal;
   /** When provided, the card becomes a selectable button (used in the tool). */
   onSelect?: (id: Goal["id"]) => void;
   selected?: boolean;
+  /** Compact shows the short tagline instead of the full description (tool Step 2). */
+  compact?: boolean;
 }
 
-// Large card describing one user goal. Static on content pages, selectable in the tool.
-export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
+const GOAL_ICONS: Record<GoalId, LucideIcon> = {
+  "easy-reach": Hand,
+  "more-space": Maximize2,
+  "cleaner-look": Sparkles,
+};
+
+// Card describing one user goal. Static on content pages, selectable in the tool.
+export function GoalCard({ goal, onSelect, selected, compact }: GoalCardProps) {
+  const Icon = GOAL_ICONS[goal.id];
+
   const content = (
     <>
-      <h3 className="text-xl font-bold">{goal.name}</h3>
-      <p className="mt-2 text-slate-600">{goal.description}</p>
+      <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-sage text-primary">
+        <Icon className="h-6 w-6" aria-hidden="true" />
+      </span>
+      <h3 className="type-card-title mt-4">{goal.name}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+        {compact ? goal.tagline : goal.description}
+      </p>
     </>
   );
 
   if (!onSelect) {
-    return <Card as="article">{content}</Card>;
+    return (
+      <Card as="article" className="h-full">
+        {content}
+      </Card>
+    );
   }
 
   return (
@@ -26,9 +46,10 @@ export function GoalCard({ goal, onSelect, selected }: GoalCardProps) {
       type="button"
       onClick={() => onSelect(goal.id)}
       aria-pressed={selected}
-      className={`h-full rounded-xl border bg-white p-6 text-left shadow-sm transition-colors hover:border-blue-400 ${
-        selected ? "border-blue-600 ring-2 ring-blue-200" : "border-slate-200"
-      }`}
+      className={[
+        "h-full rounded-2xl border-2 p-6 text-left text-card-foreground transition-colors duration-150",
+        selected ? "border-primary bg-sage" : "border-border bg-card hover:border-foreground/30",
+      ].join(" ")}
     >
       {content}
     </button>
