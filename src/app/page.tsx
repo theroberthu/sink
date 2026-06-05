@@ -7,7 +7,6 @@ import { HeroVisual } from "@/components/HeroVisual";
 import { CTASection } from "@/components/CTASection";
 import { Badge } from "@/components/Badge";
 import { AssetImage } from "@/components/AssetImage";
-import { Carousel } from "@/components/Carousel";
 import { HomeMessCard } from "@/components/HomeMessCard";
 import { COMPONENT_VISUALS } from "@/lib/images";
 import { MESS_TYPES } from "@/data/messTypes";
@@ -78,28 +77,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mess type section: diagnostic cards. Grid on desktop, swipe on mobile. */}
+      {/* Mess type section: diagnostic cards. One shared set. Horizontal scroll on
+          mobile, three column grid on desktop, via responsive CSS only. */}
       <Section
         id="mess-types"
         eyebrow="Diagnose your cabinet"
         title="Which cabinet looks like yours?"
         description="Start with the mess you recognize."
       >
-        {/* Desktop: three card grid. Mobile: swipeable carousel. Only one shows per breakpoint. */}
-        <div className="hidden gap-5 md:grid md:grid-cols-3">
+        <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
           {MESS_TYPES.map((messType, index) => (
-            <HomeMessCard key={messType.id} messType={messType} index={index} />
+            <li
+              key={messType.id}
+              className="min-w-[80%] shrink-0 snap-start sm:min-w-[60%] md:min-w-0"
+            >
+              <HomeMessCard messType={messType} index={index} />
+            </li>
           ))}
-        </div>
-
-        <div className="md:hidden">
-          <Carousel label="Cabinet mess types" slideWidth="peek">
-            {MESS_TYPES.map((messType, index) => (
-              <HomeMessCard key={messType.id} messType={messType} index={index} />
-            ))}
-          </Carousel>
-          <p className="mt-3 text-center text-xs text-muted-foreground">Swipe to compare</p>
-        </div>
+        </ul>
+        <p className="mt-3 text-center text-xs text-muted-foreground md:hidden">Swipe to compare</p>
       </Section>
 
       {/* Your fix starts with 3 things: parts of one simple system. */}
